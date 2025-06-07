@@ -141,9 +141,9 @@ you.</property>
     <property name="area" type="object" value="38"/>
    </properties>
   </object>
-  <object id="33" name="climbarea" x="1060" y="520" width="80" height="120"/>
+  <object id="33" name="climbarea" x="1060" y="520" width="80" height="80"/>
   <object id="38" name="climbarea" x="240" y="1120" width="120" height="80"/>
-  <object id="39" name="climbarea" x="240" y="920" width="120" height="120"/>
+  <object id="39" name="climbarea" x="240" y="960" width="120" height="80"/>
   <object id="40" name="climbarea" x="400" y="1120" width="160" height="40"/>
   <object id="41" name="prophecy" x="160" y="720" width="280" height="120">
    <properties>
@@ -156,18 +156,18 @@ you.</property>
    </properties>
   </object>
   <object id="50" name="climbarea" x="400" y="1000" width="160" height="40"/>
-  <object id="57" name="climbentry" x="240" y="880" width="120" height="40">
+  <object id="57" name="climbentry" x="240" y="920" width="120" height="40">
    <properties>
     <property name="area" type="object" value="39"/>
     <property name="up" type="bool" value="true"/>
    </properties>
   </object>
-  <object id="58" name="climbentry" x="1040" y="600" width="120" height="40">
+  <object id="58" name="climbentry" x="1060" y="600" width="80" height="40">
    <properties>
     <property name="area" type="object" value="33"/>
    </properties>
   </object>
-  <object id="59" name="climbentry" x="1040" y="480" width="120" height="40">
+  <object id="59" name="climbentry" x="1060" y="480" width="80" height="40">
    <properties>
     <property name="area" type="object" value="33"/>
     <property name="up" type="bool" value="true"/>
