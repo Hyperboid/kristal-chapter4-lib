@@ -6,6 +6,8 @@
     // Displays underneath the name. Optional.
     "subtitle": "",
 
+    "useSaves": false,
+
     // The version of your mod.
     "version": "v1.0.0",
     // What version of the engine your mod was made with.
@@ -25,7 +27,7 @@
     // The inventory. Contains three darkburgers, a cell phone and a shadow crystal by default.
     "inventory": {
         "items": ["glowshard", "darkburger", "darkburger", "darkburger"],
-        "key_items": ["cell_phone", "shadowcrystal"]
+        "key_items": ["cell_phone", "shadowcrystal", "claimbclaws"]
     },
 
     // Equipment for your party. Not specifying equipment defaults to the following.
