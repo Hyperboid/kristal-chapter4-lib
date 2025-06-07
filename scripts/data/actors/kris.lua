@@ -5,7 +5,7 @@ function actor:init()
     super.init(self)
     Utils.merge(self.offsets, {
         -- TODO: Accuracy.
-        ["climb/climb"] = {-5, 0}
+        ["climb/climb"] = {-5, 4}
     })
 end
 

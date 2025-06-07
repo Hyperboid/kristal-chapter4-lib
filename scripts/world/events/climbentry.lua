@@ -27,11 +27,11 @@ function event:onInteract(player, dir)
     ---@diagnostic disable-next-line: param-type-mismatch
     self.world:startCutscene(function (cutscene)
         cutscene:detachFollowers()
-        local tx, ty = Utils.round(player.x-(self.x+20), 40)+(self.x+20), self.y
+        local tx, ty = Utils.round(player.x-(self.x+20), 40)+(self.x+20), Utils.round(self.y, 40)
         if dir == "down" then
             ty = ty + 80
         else
-            ty = ty - player.height
+            ty = ty - 40
         end
 
         Assets.playSound("wing")
@@ -43,7 +43,8 @@ function event:onInteract(player, dir)
     end)
 end
 
-function event:onEnter(player)
+---@param player Player
+function event:onClimbEnter(player)
     if self.world:hasCutscene() then return end
     if player.state_manager.state == "CLIMB" then
         player:setState("WALK")
@@ -54,7 +55,7 @@ function event:onEnter(player)
         ---@param cutscene WorldCutscene
         ---@diagnostic disable-next-line: param-type-mismatch
         self.world:startCutscene(function (cutscene)
-            Assets.playSound("wing")
+            Assets.stopAndPlaySound("wing")
             player.sprite:set("jump_ball")
             cutscene:wait(cutscene:jumpTo(player,tx,ty,10,.5))
             player:resetSprite()
