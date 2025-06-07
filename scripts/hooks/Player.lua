@@ -9,10 +9,12 @@ end
 
 function Player:beginClimb(last_state)
     self:setSprite("climb/climb")
+    self.world.can_open_menu = false
 end
 
 function Player:endClimb(next_state)
     self:resetSprite()
+    self.world.can_open_menu = true
 end
 
 function Player:updateClimb()
