@@ -39,6 +39,9 @@ end
 function Player:processClimbInputs()
     if self.climb_delay > 0 then
         self.climb_delay = Utils.approach(self.climb_delay, 0, DT)
+        if self.climb_delay <= 0 then
+            self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
+        end
         return
     end
     local dist
@@ -117,6 +120,7 @@ function Player:doClimbJump(direction, distance)
         local allowed, obj = self:canClimb(dx*dist, dy*dist)
         if allowed then
             Assets.playSound("wing", 0.6, 1.1 + (love.math.random()*0.1))
+            self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
             self:slideTo(self.x + (dx*40*dist), self.y + (dy*40*dist), duration, "linear", function ()
                 self.climb_delay = 2/30
                 if self.climb_callback then
@@ -131,7 +135,7 @@ function Player:doClimbJump(direction, distance)
                 Assets.playSound("snd_bump")
             end
         end
-        if obj and obj.preClimbEnter then
+        if dist <= 1 and obj and obj.preClimbEnter then
             obj:preClimbEnter(self)
         end
         if allowed then

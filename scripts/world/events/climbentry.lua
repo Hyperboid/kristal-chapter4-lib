@@ -49,7 +49,9 @@ function event:preClimbEnter(player)
     if player.state_manager.state == "CLIMB" then
         player:setState("WALK")
         local tx, ty = player.x, self.y
-        if not self.up then
+        if self.up then
+            ty = ty - 5
+        else
             ty = ty + self.height + 40
         end
         ---@param cutscene WorldCutscene
