@@ -44,7 +44,7 @@ function event:onInteract(player, dir)
 end
 
 ---@param player Player
-function event:onClimbEnter(player)
+function event:preClimbEnter(player)
     if self.world:hasCutscene() then return end
     if player.state_manager.state == "CLIMB" then
         player:setState("WALK")

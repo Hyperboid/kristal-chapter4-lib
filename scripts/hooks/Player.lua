@@ -81,7 +81,7 @@ function Player:canClimb(dx, dy)
         local x,y = (self.width/2) - (size/2), (self.height/2) - (size/2) + 8
         x,y = x + (dx*20),y + (dy*20)
         self.climb_collider.x, self.climb_collider.y = x, y
-        if event.onClimbEnter and event:collidesWith(self.climb_collider) then
+        if event.preClimbEnter and event:collidesWith(self.climb_collider) then
             trigger = event
         end
     end
@@ -123,13 +123,16 @@ function Player:doClimbJump(direction, distance)
                     self:climb_callback()
                     self.climb_callback = nil
                 end
+                if obj and obj.onClimbEnter then
+                    obj:onClimbEnter(self)
+                end
             end)
             if dist == 1 then
                 Assets.playSound("snd_bump")
             end
         end
-        if obj and obj.onClimbEnter then
-            obj:onClimbEnter(self)
+        if obj and obj.preClimbEnter then
+            obj:preClimbEnter(self)
         end
         if allowed then
             break
