@@ -9,6 +9,7 @@ end
 
 ---@param player Player
 function event:onInteract(player, dir)
+    if player.state_manager.state ~= "WALK" then return end
     if dir ~= "up" and dir ~= "down" then
         Kristal.Console:warn("climbentry interacted at a weird angle ("..dir..")! Assuming \"down\"...")
         dir = "down"
