@@ -46,15 +46,18 @@ end
 function Player:processClimbInputs()
     if self.climb_delay > 0 then
         self.climb_delay = Utils.approach(self.climb_delay, 0, DT)
-        if self.climb_delay <= 0 then
+        if self.climb_delay <= 0 and self.climb_ready_callback then
+            self:climb_ready_callback()
+            self.climb_ready_callback = nil
             self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
+
+            if self.sprite.sprite_options[2] ~= "climb/climb" then
+                self:setSprite("climb/climb")
+            end
         end
         return
     end
     local dist
-    if Input.pressed("confirm") then
-        self.jumpchargecon = 1
-    end
     if self.jumpchargecon >= 1 then
         if Input.released("confirm") then
             self:doClimbJump(self.facing, self.jumpchargeamount)
@@ -70,6 +73,10 @@ function Player:processClimbInputs()
             end
         end
         return
+    else
+        if Input.down("confirm") then
+            self.jumpchargecon = 1
+        end
     end
     if Input.down("left") then
         self:doClimbJump("left", dist)
@@ -154,6 +161,7 @@ function Player:processJumpCharge()
             self.jumpchargecon = 0;
             self.climb_jumping = 1;
             self.climbcon = 1;
+            self.color = COLORS.white
             self.jumpchargesfx:stop()
         end
         
@@ -234,6 +242,9 @@ function Player:doClimbJump(direction, distance)
             self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
             self:slideTo(self.x + (dx*40*dist), self.y + (dy*40*dist), duration, "linear", function ()
                 self.climb_delay = 2/30
+                if self.sprite.sprite_options[2] ~= "climb/climb" then
+                    self:setSprite("climb/climb")
+                end
                 if self.climb_callback then
                     self:climb_callback()
                     self.climb_callback = nil
@@ -242,9 +253,9 @@ function Player:doClimbJump(direction, distance)
                     obj:onClimbEnter(self)
                 end
             end)
-            if dist == 1 then
-                Assets.playSound("snd_bump")
-            end
+        elseif dist == 1 and not obj then
+            Assets.playSound("bump")
+            self.climb_delay = 4/30
         end
         if dist <= 1 and obj and obj.preClimbEnter then
             obj:preClimbEnter(self)
