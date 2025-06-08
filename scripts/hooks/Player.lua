@@ -306,6 +306,9 @@ function Player:drawClimbReticle()
     end
     local tempalpha = 1;
 
+    love.graphics.push()
+    love.graphics.translate(self.width/2, self.height - 10)
+
     -- I /think/ this is what global.inv is?
     if (self.world.soul.inv_timer > 0) then
         tempalpha = 0.5;
@@ -353,8 +356,8 @@ function Player:drawClimbReticle()
             if (self.facing == "left") then
                 px = 0-i;
             end
-            
-            if self:canClimb(px, py) then
+            local s,o = self:canClimb(px, py)
+            if s or o then
                 found = i
             end
         end
@@ -418,15 +421,7 @@ function Player:drawClimbReticle()
         ]]
         local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(self.jumpchargetimer / self.chargetime2, 0, 1) * 62), 22, 62)
         Draw.setColor(col)
-        love.graphics.push()
-        love.graphics.translate(self.width/2, self.height - 10)
         Draw.draw(Assets.getFrames("ui/climb/hint")[Utils.clampWrap(math.floor(RUNTIME * 15), 1,4)], quad, xoff/2, yoff/2, -math.rad(angle))
-        love.graphics.pop()
-    end
-    do return end
-
-    if (dodraw) then
-        draw_sprite_ext(sprite_index, image_index, x + drawx, y + drawy + drawoffsety, image_xscale, image_yscale, image_angle, image_blend, tempalpha * image_alpha);
     end
 
     if (DEBUG_RENDER) then
@@ -438,32 +433,29 @@ function Player:drawClimbReticle()
     local drawreticle = true;
 
     if (drawreticle and self.jumpchargecon ~= 0 and not self.onrotatingtower and found) then
-        local px = x - 20;
-        local py = y - 20;
+        local px = 0 - 12;
+        local py = 0 - 12;
         
-        if (dir == 0) then
-            py = py + (40 * found);
+        if (self.facing == "down") then
+            py = py + (20 * found);
         end
         
-        if (dir == 1) then
-            px = px + (40 * found);
+        if (self.facing == "right") then
+            px = px + (20 * found);
         end
         
-        if (dir == 2) then
-            py = px - (40 * found);
+        if (self.facing == "up") then
+            py = px - (20 * found);
         end
         
-        if (dir == 3) then
-            px = px - (40 * found);
+        if (self.facing == "left") then
+            px = px - (20 * found);
         end
         
-        local col = merge_color(c_yellow, c_white, 0.4 + (sin(self.jumpchargetimer / 3) * 0.4));
-        
-        if (dodraw) then
-            draw_sprite_ext(spr_climb_reticle, 0, px + 0, py + 0, 2, 2, 0, col, _alph);
-        end
+        Draw.setColor(Utils.lerp(COLORS.yellow, COLORS.white, 0.4 + (math.sin(self.jumpchargetimer / 3) * 0.4)));
+        Draw.draw(Assets.getTexture("ui/climb/reticle"), px, py)
     end
-
+    love.graphics.pop()
 end
 
 function Player:updateClimb()
