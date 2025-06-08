@@ -35,6 +35,10 @@ function Player:draw()
     if DEBUG_RENDER then
         self.climb_collider:draw(1, 1, 0)
     end
+
+    if self.state == "CLIMB" then
+        self:drawClimbReticle()
+    end
 end
 
 function Player:endClimb(next_state)
@@ -294,6 +298,169 @@ function Player:doClimbJump(direction, distance)
         end
     end
     Object.endCache()
+end
+
+function Player:drawClimbReticle()
+    local tempalpha = 1;
+
+    -- I /think/ this is what global.inv is?
+    if (self.world.soul.inv_timer > 0) then
+        tempalpha = 0.5;
+    end
+
+    local found = 0;
+    local _alph;
+
+    if (not self.onrotatingtower and self.jumpchargecon ~= 0) then
+        local count = 1;
+        
+        if (self.jumpchargetimer >= self.chargetime1) then
+            count = 2;
+        end
+        
+        if (self.jumpchargetimer >= self.chargetime2) then
+            count = 3;
+        end
+        
+        local px = 0;
+        local py = 0;
+        
+        for i = 1, count do
+            -- with (instance_place(px, py, obj_climbstarter))
+            -- {
+            --     if ((other.dir == 2 && e_up) || (other.dir == 0 && e_down) || (other.dir == 3 && e_left) || (other.dir == 1 && e_right))
+            --     {
+            --         found = i;
+            --         break;
+            --     }
+            -- }
+            
+            if (self.facing == "down") then
+                py = 0+i;
+            end
+            
+            if (self.facing == "right") then
+                px = 0+i;
+            end
+            
+            if (self.facing == "up") then
+                py = 0-i;
+            end
+            
+            if (self.facing == "left") then
+                px = 0-i;
+            end
+            
+            if self:canClimb(px, py) then
+                found = i
+            end
+        end
+        
+        _alph = Utils.clamp(self.jumpchargetimer / 14, 0.1, 0.8);
+        local angle = 0;
+        local xoff = 0;
+        local yoff = 0;
+        
+        if (self.facing == "down") then
+            angle = 0;
+            xoff = -22;
+            yoff = 18;
+        end
+        
+        if (self.facing == "right") then
+            angle = 90;
+            xoff = 18;
+            yoff = 22;
+        end
+        
+        if (self.facing == "up") then
+            angle = 180;
+            xoff = 22;
+            yoff = -18;
+        end
+        
+        if (self.facing == "left") then
+            angle = 270;
+            xoff = -18;
+            yoff = -22;
+        end
+        
+        -- TODO: Put these colors in the PALETTE
+        local col = {200/255, 200/255, 200/255};
+        
+        if (found ~= 0) then
+            col = {255/255, 200/255, 132/255};
+        end
+        --[[
+            draw_sprite_general(
+                --sprite,
+                Assets.getTexture("ui/climb/hint"),
+                --subimg,
+                floor(current_time * 0.5) % 4,
+                --left, top,
+                0, 0,
+                --width, height,
+                22, (self.jumpchargetimer / self.chargetime2) * 62,
+                --x, y,
+                x + xoff, y + yoff,
+                --xscale, yscale,
+                2, 2,
+                --rot,
+                angle,
+                --c1, c2, c3, c4,
+                col, col, col, col,
+                --alpha
+                0.85
+            );
+        ]]
+        local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(self.jumpchargetimer / self.chargetime2, 0, 1) * 62), 22, 62)
+        Draw.setColor(col)
+        love.graphics.push()
+        love.graphics.translate(self.width/2, self.height - 10)
+        Draw.draw(Assets.getFrames("ui/climb/hint")[Utils.clampWrap(math.floor(RUNTIME * 15), 1,4)], quad, xoff/2, yoff/2, -math.rad(angle))
+        love.graphics.pop()
+    end
+    do return end
+
+    if (dodraw) then
+        draw_sprite_ext(sprite_index, image_index, x + drawx, y + drawy + drawoffsety, image_xscale, image_yscale, image_angle, image_blend, tempalpha * image_alpha);
+    end
+
+    if (DEBUG_RENDER) then
+        local count = 0;
+        local space = 10;
+        local border = 8;
+    end
+
+    local drawreticle = true;
+
+    if (drawreticle and self.jumpchargecon ~= 0 and not self.onrotatingtower and found) then
+        local px = x - 20;
+        local py = y - 20;
+        
+        if (dir == 0) then
+            py = py + (40 * found);
+        end
+        
+        if (dir == 1) then
+            px = px + (40 * found);
+        end
+        
+        if (dir == 2) then
+            py = px - (40 * found);
+        end
+        
+        if (dir == 3) then
+            px = px - (40 * found);
+        end
+        
+        local col = merge_color(c_yellow, c_white, 0.4 + (sin(self.jumpchargetimer / 3) * 0.4));
+        
+        if (dodraw) then
+            draw_sprite_ext(spr_climb_reticle, 0, px + 0, py + 0, 2, 2, 0, col, _alph);
+        end
+    end
+
 end
 
 function Player:updateClimb()
