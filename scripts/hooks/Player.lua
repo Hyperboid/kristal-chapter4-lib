@@ -241,11 +241,31 @@ function Player:doClimbJump(direction, distance)
         local allowed, obj = self:canClimb(dx*dist, dy*dist)
         if allowed then
             Assets.playSound("wing", 0.6, 1.1 + (love.math.random()*0.1))
-            self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
+            if distance > 1 then
+                if self.facing == "left" then
+                    self:setSprite("climb/jump_left")
+                elseif self.facing == "right" then
+                    self:setSprite("climb/jump_right")
+                else
+                    self:setSprite("climb/jump_up")
+                end
+                self.sprite:play(0.1, true)
+            else
+                self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
+            end
             self:slideTo(self.x + (dx*40*dist), self.y + (dy*40*dist), duration, "linear", function ()
                 self.climb_delay = 2/30
+                if distance ~= 1 then
+                    self.climb_delay = 2/30
+                end
                 if self.sprite.sprite_options[2] ~= "climb/climb" then
-                    self:setSprite("climb/climb")
+                    if self.facing == "left" then
+                        self:setSprite("climb/land_left")
+                    elseif self.facing == "right" then
+                        self:setSprite("climb/land_right")
+                    else
+                        self:setSprite("climb/jump_up")
+                    end
                 end
                 if self.climb_callback then
                     self:climb_callback()
