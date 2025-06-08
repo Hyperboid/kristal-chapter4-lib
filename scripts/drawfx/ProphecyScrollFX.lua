@@ -11,7 +11,7 @@ function ProphecyScrollFX:init(texture, priority)
     self.color = Utils.hexToRgb("#42D0FF")
     -- TODO: Find out what the right color is
     self.secondary_color = {1, 1, 1}
-    self.secondary_offset = 0
+    self.secondary_offset = 100
     self.secondary_timescale = 1
 end
 
