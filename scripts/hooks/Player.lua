@@ -301,6 +301,10 @@ function Player:doClimbJump(direction, distance)
 end
 
 function Player:drawClimbReticle()
+    -- TODO: Something better
+    if love.graphics.getCanvas() and love.graphics.getCanvas() ~= SCREEN_CANVAS then
+        return
+    end
     local tempalpha = 1;
 
     -- I /think/ this is what global.inv is?

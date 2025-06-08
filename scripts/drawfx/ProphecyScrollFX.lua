@@ -9,6 +9,10 @@ function ProphecyScrollFX:init(texture, priority)
     self.tick = 0
     self.scroll_speed = 1
     self.color = Utils.hexToRgb("#42D0FF")
+    -- TODO: Find out what the right color is
+    self.secondary_color = {1, 1, 1}
+    self.secondary_offset = 0
+    self.secondary_timescale = 1
 end
 
 function ProphecyScrollFX:update()
@@ -18,15 +22,31 @@ end
 function ProphecyScrollFX:draw(texture)
     love.graphics.stencil(function()
         local last_shader = love.graphics.getShader()
-        love.graphics.setShader(Kristal.Shaders["Mask"])
+        local shader = Assets.getShader("limitedmask")
+        shader:send("min", 0)
+        shader:send("max", 0.5)
+        love.graphics.setShader(shader)
         Draw.draw(texture)
         love.graphics.setShader(last_shader)
     end, "replace", 1)
     
     local t = Utils.floor(self.tick * 15, 2)
     Draw.setColor(self.color)
-    love.graphics.setStencilTest("greater", .9)
+    love.graphics.setStencilTest("greater", 0)
     local ox, oy = self.parent:getScreenPos()
+    Draw.drawWrapped(self.texture, true, true, t+ox, t+oy, 0, 2,2)
+
+    love.graphics.stencil(function()
+        local last_shader = love.graphics.getShader()
+        local shader = Assets.getShader("limitedmask")
+        shader:send("min", 0.5)
+        shader:send("max", 1)
+        love.graphics.setShader(shader)
+        Draw.draw(texture)
+        love.graphics.setShader(last_shader)
+    end, "replace", 1)
+    t = (t * self.secondary_timescale) + self.secondary_offset
+    Draw.setColor(self.secondary_color)
     Draw.drawWrapped(self.texture, true, true, t+ox, t+oy, 0, 2,2)
     love.graphics.setStencilTest()
 end
