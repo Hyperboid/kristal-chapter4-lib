@@ -15,6 +15,7 @@ function Player:init(chara, x, y)
     self.jumpchargetimer = 0
     self.chargetime1 = 10
     self.chargetime2 = 22
+    self.draw_reticle = true
 end
 
 function Player:beginClimb(last_state)
@@ -148,7 +149,9 @@ function Player:processJumpCharge()
                 self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.4 + (math.floor(math.sin(self.jumpchargetimer)) * 0.4));
                 
                 if ((self.jumpchargetimer % 8) == 0) then
+                    self.draw_reticle = false
                     local afterimage = AfterImage(self, 0.3, ((1 / (0.2)) / 30 * 0.3));
+                    self.draw_reticle = true
                     afterimage.alpha = 0.3;
                     afterimage.graphics.grow = 0.05
                     afterimage.physics.speed_y = 1
@@ -302,7 +305,7 @@ end
 
 function Player:drawClimbReticle()
     -- TODO: Something better
-    if love.graphics.getCanvas() and love.graphics.getCanvas() ~= SCREEN_CANVAS then
+    if not self.draw_reticle then
         return
     end
     local tempalpha = 1;
