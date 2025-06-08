@@ -8,6 +8,13 @@ function Player:init(chara, x, y)
     ---@type "left"|"right"|"up"|"down"?
     self.last_climb_direction = nil
     self.climb_delay = 0
+    self.jumpchargesfx = Assets.newSound("chargeshot_charge")
+    self.jumpchargesfx:setLooping(true)
+    self.jumpchargesfx:setVolume(0.3)
+    self.jumpchargecon = -1
+    self.jumpchargetimer = 0
+    self.chargetime1 = 10
+    self.chargetime2 = 22
 end
 
 function Player:beginClimb(last_state)
@@ -45,11 +52,24 @@ function Player:processClimbInputs()
         return
     end
     local dist
-    if Input.down("confirm") then
-        return
+    if Input.pressed("confirm") then
+        self.jumpchargecon = 1
     end
-    if Input.released("confirm") then
-        dist = 3
+    if self.jumpchargecon >= 1 then
+        if Input.released("confirm") then
+            self:doClimbJump(self.facing, self.jumpchargeamount)
+        else
+            if Input.down("left") then
+                self:setFacing("left")
+            elseif Input.down("right") then
+                self:setFacing("right")
+            elseif Input.down("up") then
+                self:setFacing("up")
+            elseif Input.down("down") then
+                self:setFacing("down")
+            end
+        end
+        return
     end
     if Input.down("left") then
         self:doClimbJump("left", dist)
@@ -59,6 +79,95 @@ function Player:processClimbInputs()
         self:doClimbJump("up", dist)
     elseif Input.down("down") then
         self:doClimbJump("down", dist)
+    end
+end
+
+function Player:processJumpCharge()
+    if (self.jumpchargecon == 1) then
+        -- climbmomentum = 0;
+        -- x = remx;
+        -- y = remy;
+        -- jumpchargesfx = snd_loop(snd_chargeshot_charge);
+        self.jumpchargesfx:play()
+        self.jumpchargesfx:setPitch(0.4)
+        -- snd_volume(jumpchargesfx, 0.3, 0);
+        self.jumpchargetimer = 0;
+        self.jumpchargeamount = 1;
+        self.jumpchargecon = 2;
+        self:setSprite("climb/charge/up")
+        -- sprite_index = spr_kris_climb_new_charge;
+        -- image_index = 0;
+    end
+    
+    if (self.jumpchargecon == 2) then
+        local docharge = 0
+        
+        if (Input.down("confirm") or self.jumpchargetimer < 3) then
+            docharge = 1;
+        end
+        
+        if (Input.pressed("confirm")) then
+            docharge = 2;
+        end
+        
+        if (docharge == 1) then
+            if (self.facing == "up" or self.facing == "down") then
+                self:setSprite("climb/charge/up");
+            elseif (self.facing == "right") then
+                self:setSprite("climb/charge/right");
+            else
+                self:setSprite("climb/charge/left");
+            end
+            
+            self.jumpchargetimer = self.jumpchargetimer + DTMULT;
+            
+            if (self.jumpchargetimer >= self.chargetime1) then
+                self.sprite:setFrame(2);
+                self.jumpchargesfx:setPitch(0.5)
+                self.jumpchargeamount = 2;
+                self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.2 + (math.floor(math.sin(self.jumpchargetimer / 2)) * 0.2));
+            end
+            
+            if (self.jumpchargetimer >= self.chargetime2) then
+                self.sprite:setFrame(3)
+                self.jumpchargeamount = 3;
+                self.jumpchargesfx:setPitch(0.7)
+                self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.4 + (math.floor(math.sin(self.jumpchargetimer)) * 0.4));
+                
+                if ((self.jumpchargetimer % 8) == 0) then
+                    local afterimage = AfterImage(self, 0.3, ((1 / (0.2)) / 30 * 0.3));
+                    afterimage.alpha = 0.3;
+                    afterimage.graphics.grow = 0.05
+                    afterimage.physics.speed_y = 1
+                    afterimage:setParent(self)
+                    
+                    -- TODO: ahaHAHHAHAHAHHAAHAHA
+                    -- if (i_ex(obj_rotating_tower_controller_new) && i_ex(obj_climb_kris)) then
+                    --     afterimage.x = obj_rotating_tower_controller_new.tower_x;
+                    --     afterimage.depth = obj_rotating_tower_controller_new.depth - 4;
+                    -- end
+                end
+            end
+        end
+        
+        if (docharge == 0) then
+            self.jumpchargecon = 0;
+            self.climb_jumping = 1;
+            self.climbcon = 1;
+            self.jumpchargesfx:stop()
+        end
+        
+        if (docharge == 2) then
+            -- snd_play(182, 0.7, 0.4);
+            -- snd_play(181, 0.7, 0.4);
+            -- snd_play(401, 0.2, 1.8);
+            -- button2buffer = 10;
+            -- jumpchargecon = 0;
+            -- jumpchargetimer = 0;
+            -- neutralcon = 1;
+            self.color = COLORS.white;
+            -- snd_stop(jumpchargesfx);
+        end
     end
 end
 
@@ -98,6 +207,8 @@ end
 ---@param direction "up"|"down"|"left"|"right"
 ---@param distance integer?
 function Player:doClimbJump(direction, distance)
+    direction = direction or self.facing
+    self:setFacing(direction)
     
     local charged = (distance ~= nil)
     distance = distance or 1
@@ -148,6 +259,9 @@ end
 function Player:updateClimb()
     if self:isMovementEnabled() and not self.physics.move_target then
         self:processClimbInputs()
+        if self.jumpchargecon > 0 then
+            self:processJumpCharge()
+        end
     end
     -- Placeholder, obviously.
     local o_noclip = self.noclip
