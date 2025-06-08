@@ -257,6 +257,13 @@ function Player:doClimbJump(direction, distance)
             end)
         elseif dist == 1 and not obj then
             Assets.playSound("bump")
+            -- TODO: use the correct sprite
+            if self.facing == "left" then
+                self:setSprite("climb/land_left")
+            else
+                self:setSprite("climb/land_right")
+            end
+            -- self.sprite:setFrame(2)
             self.climb_delay = 4/30
         end
         if dist <= 1 and obj and obj.preClimbEnter then
