@@ -11,7 +11,7 @@ function Player:init(chara, x, y)
     self.jumpchargesfx = Assets.newSound("chargeshot_charge")
     self.jumpchargesfx:setLooping(true)
     self.jumpchargesfx:setVolume(0.3)
-    self.jumpchargecon = -1
+    self.jumpchargecon = 0
     self.jumpchargetimer = 0
     self.chargetime1 = 10
     self.chargetime2 = 22
@@ -463,6 +463,8 @@ function Player:updateClimb()
         self:processClimbInputs()
         if self.jumpchargecon > 0 then
             self:processJumpCharge()
+        else
+            self.jumpchargesfx:stop()
         end
     end
     -- Placeholder, obviously.
@@ -473,6 +475,11 @@ function Player:updateClimb()
 
     Object.startCache()
     Object.endCache()
+end
+
+function Player:onRemove(parent)
+    super.onRemove(self, parent)
+    self.jumpchargesfx:stop()
 end
 
 return Player
