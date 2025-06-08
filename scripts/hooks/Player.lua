@@ -25,8 +25,8 @@ end
 
 function Player:setActor(actor)
     super.setActor(self, actor)
-    local size = 14
-    self.climb_collider = Hitbox(self, (self.width/2) - (size/2), (self.height/2) - (size/2) + 8, (size), (size))
+    local size = 34
+    self.climb_collider = Hitbox(Game.world, (self.width/2) - (size/2), (self.height/2) - (size/2) + 8, (size), (size))
 end
 
 function Player:draw()
@@ -34,7 +34,7 @@ function Player:draw()
     super.draw(self)
 
     if DEBUG_RENDER then
-        self.climb_collider:draw(1, 1, 0)
+        self.climb_collider:drawFor(self, 1, 1, 0)
     end
 
     if self.state == "CLIMB" then
@@ -83,6 +83,7 @@ function Player:processClimbInputs()
     else
         if Input.down("confirm") then
             self.jumpchargecon = 1
+            return
         end
     end
     if Input.down("left") then
@@ -196,10 +197,12 @@ function Player:canClimb(dx, dy)
     local trigger
     for _, event in ipairs(self.world.stage:getObjects(Event)) do
         ---@cast event Event.climbarea|Event.climbentry
-        
-        local size = 14
-        local x,y = (self.width/2) - (size/2), (self.height/2) - (size/2) + 8
-        x,y = x + (dx*20),y + (dy*20)
+        local x,y
+        x,y = -(self:getScaledWidth()/2), (self:getScaledHeight()/2) + 8
+        x,y = x + 2, y - 82
+        x,y = x + self.x,y + self.y
+        x,y = x + (dx*40),y + (dy*40)
+        self.climb_collider.parent = self.parent
         self.climb_collider.x, self.climb_collider.y = x, y
         if (event.preClimbEnter or event.climbable) and event:collidesWith(self.climb_collider) then
             if event.climbable then
@@ -432,7 +435,7 @@ function Player:drawClimbReticle()
 
     local drawreticle = true;
 
-    if (drawreticle and self.jumpchargecon ~= 0 and not self.onrotatingtower and found) then
+    if (drawreticle and self.jumpchargecon ~= 0 and not self.onrotatingtower and found ~= 0) then
         local px = 0 - 12;
         local py = 0 - 12;
         
@@ -481,5 +484,25 @@ function Player:onRemove(parent)
     super.onRemove(self, parent)
     self.jumpchargesfx:stop()
 end
+
+function Player:onAdd(parent)
+    super.onAdd(self, parent)
+    if not self.world then return end
+    if not self.world.map.data then return end
+    if not self.world.map.data.properties then return end
+    if self.world.map.data.properties.playerstate then
+        self:setState(self.world.map.data.properties.playerstate)
+    end
+end
+
+function Player:applyTransformTo(transform, floor_x, floor_y)
+    local orig_x = self.x
+    if self.onrotatingtower then
+        self.x = SCREEN_WIDTH/2
+    end
+    super.applyTransformTo(self, transform, floor_x, floor_y)
+    self.x = orig_x
+end
+
 
 return Player
