@@ -4,7 +4,7 @@ local event, super = Class(Event, "climbarea")
 function event:init(data)
     super.init(self, data)
     local properties = data and data.properties or {}
-    
+    self.climbable = true
 end
 
 function event:draw()

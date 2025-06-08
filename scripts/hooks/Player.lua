@@ -194,24 +194,20 @@ function Player:canClimb(dx, dy)
     Object.startCache()
     local climbarea
     local trigger
-    for _, area in ipairs(self.world.stage:getObjects(Registry.getEvent("climbarea"))) do
-        ---@cast area Event.climbarea
-        local size = 14
-        local x,y = (self.width/2) - (size/2), (self.height/2) - (size/2) + 8
-        x,y = x + (dx*20),y + (dy*20)
-        self.climb_collider.x, self.climb_collider.y = x, y
-        if area:collidesWith(self.climb_collider) then
-            climbarea = area
-        end
-    end
     for _, event in ipairs(self.world.stage:getObjects(Event)) do
-        ---@cast event Event
+        ---@cast event Event.climbarea|Event.climbentry
+        
         local size = 14
         local x,y = (self.width/2) - (size/2), (self.height/2) - (size/2) + 8
         x,y = x + (dx*20),y + (dy*20)
         self.climb_collider.x, self.climb_collider.y = x, y
-        if event.preClimbEnter and event:collidesWith(self.climb_collider) then
-            trigger = event
+        if (event.preClimbEnter or event.climbable) and event:collidesWith(self.climb_collider) then
+            if event.climbable then
+                climbarea = event
+            end
+            if event.preClimbEnter then
+                trigger = event
+            end
         end
     end
     Object.endCache()
