@@ -46,9 +46,11 @@ end
 function Player:processClimbInputs()
     if self.climb_delay > 0 then
         self.climb_delay = Utils.approach(self.climb_delay, 0, DT)
-        if self.climb_delay <= 0 and self.climb_ready_callback then
-            self:climb_ready_callback()
-            self.climb_ready_callback = nil
+        if self.climb_delay <= 0 then
+            if self.climb_ready_callback then
+                self:climb_ready_callback()
+                self.climb_ready_callback = nil
+            end
             self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
 
             if self.sprite.sprite_options[2] ~= "climb/climb" then
