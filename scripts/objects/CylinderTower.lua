@@ -76,6 +76,8 @@ function CylinderTower:draw()
         if x1 < x2 then
             local quad = self.quads[i]
             local sx = (x2 - x1) / select(3, quad:getViewport())
+            local luma = sx
+            Draw.setColor({luma,luma,luma,1})
             Draw.draw(canvas, quad, x1, 0, 0, sx, 1)
         end
     end
