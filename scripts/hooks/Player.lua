@@ -232,6 +232,9 @@ function Player:doClimbJump(direction, distance)
     
     local charged = (distance ~= nil)
     distance = distance or 1
+    if direction == "left" or direction == "right" then
+        self.last_x_climb = direction
+    end
     local dx, dy = unpack(({
         up = {0, -1},
         down = {0, 1},
@@ -288,13 +291,13 @@ function Player:doClimbJump(direction, distance)
         elseif dist == 1 and not obj then
             Assets.playSound("bump")
             -- TODO: use the correct sprite
-            if self.facing == "left" then
-                self:setSprite("climb/land_left")
+            if self.last_x_climb == "left" then
+                self:setSprite("climb/slip_left")
             else
-                self:setSprite("climb/land_right")
+                self:setSprite("climb/slip_right")
             end
             -- self.sprite:setFrame(2)
-            self.climb_delay = 4/30
+            self.climb_delay = 7/30
         end
         if dist <= 1 and obj and obj.preClimbEnter then
             obj:preClimbEnter(self)
