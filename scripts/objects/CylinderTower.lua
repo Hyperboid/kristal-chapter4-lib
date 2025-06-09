@@ -17,7 +17,6 @@ function CylinderTower:init(map, depth)
     self.quads = {}
     local slice = 0.5
     local tw, th = self.map.tile_width, self.map.tile_height
-    for _=1,3 do
         for i = 1, self.map.width, slice do
             table.insert(self.quads,
                 love.graphics.newQuad(
@@ -27,7 +26,6 @@ function CylinderTower:init(map, depth)
                 )
             )
         end
-    end
 end
 
 function CylinderTower:addLayer(layer, depth)
@@ -49,10 +47,11 @@ function CylinderTower:draw()
 
         local angle = (i - (#self.quads/2))
         angle = angle - (((self.world.player.x-110)-(SCREEN_WIDTH/2)) / 20)
+        angle = math.rad(angle * 360 / #self.quads)
 
-        local x1, x2 = (angle-1), angle
+        local x1, x2 = math.sin(angle-math.rad(360/#self.quads)), math.sin(angle)
         -- x1, x2 = (math.abs(x1)^1.1) * Utils.sign(x1), (math.abs(x2)^1.1) * Utils.sign(x2)
-        x1, x2 = x1 * 20, x2 * 20
+        x1, x2 = x1 * 140, x2 * 140
         -- This is basically backface culling lol
         if x1 < x2 then
             local quad = self.quads[i]
