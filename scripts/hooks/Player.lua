@@ -16,6 +16,7 @@ function Player:init(chara, x, y)
     self.chargetime1 = 10
     self.chargetime2 = 22
     self.draw_reticle = true
+    self.onrotatingtower = false
 end
 
 function Player:beginClimb(last_state)
@@ -202,6 +203,9 @@ function Player:canClimb(dx, dy)
         x,y = x + 2, y - 82
         x,y = x + self.x,y + self.y
         x,y = x + (dx*40),y + (dy*40)
+        if self.onrotatingtower then
+            x = Utils.clampWrap(x, 0, self.world.width)
+        end
         self.climb_collider.parent = self.parent
         self.climb_collider.x, self.climb_collider.y = x, y
         if (event.preClimbEnter or event.climbable) and event:collidesWith(self.climb_collider) then
@@ -475,6 +479,10 @@ function Player:updateClimb()
     self.noclip = true
     -- self:updateWalk()
     self.noclip = o_noclip
+    if self.onrotatingtower and not self.physics.move_target then
+        -- TODO: Find out why I have to put 1 here and not 0
+        self.x = Utils.clampWrap(self.x, 1, self.world.width)
+    end
 
     Object.startCache()
     Object.endCache()
@@ -497,7 +505,7 @@ end
 
 function Player:applyTransformTo(transform, floor_x, floor_y)
     local orig_x = self.x
-    if self.onrotatingtower then
+    if self.onrotatingtower and Object.CACHE_ATTEMPTS <= 0 then
         self.x = SCREEN_WIDTH/2
     end
     super.applyTransformTo(self, transform, floor_x, floor_y)
