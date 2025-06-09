@@ -500,6 +500,9 @@ function Player:onAdd(parent)
     if not self.world.map.data.properties then return end
     if self.world.map.data.properties.playerstate then
         self:setState(self.world.map.data.properties.playerstate)
+        if self.world.map.cyltower then
+            self.onrotatingtower = true
+        end
     end
 end
 
