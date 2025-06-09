@@ -34,6 +34,24 @@ function CylinderTower:addLayer(layer, depth)
     self:addChild(tilelayer)
 end
 
+function CylinderTower:drawReticle()
+    love.graphics.push()
+    love.graphics.translate(-self.world.width,0)
+    -- TODO: We _probably_ don't strictly need 5 rounds of 
+    for _=1,3 do
+        love.graphics.push()
+        local transform = love.graphics.getTransformRef()
+        Object.startCache()
+        self.world.player:applyTransformTo(transform, 1 / CURRENT_SCALE_X, 1 / CURRENT_SCALE_Y)
+        Object.endCache()
+        love.graphics.replaceTransform(transform)
+        self.world.player:drawClimbReticle()
+        love.graphics.pop()
+        love.graphics.translate(self.world.width,0)
+    end
+    love.graphics.pop()
+end
+
 function CylinderTower:draw()
     if not self.world.player.onrotatingtower then
         love.graphics.translate(-self.x, 0)
@@ -41,7 +59,9 @@ function CylinderTower:draw()
     end
     local canvas = Draw.pushCanvas(self.map.width * self.map.tile_width, self.map.height * self.map.tile_height)
     super.draw(self)
+    self:drawReticle()
     Draw.popCanvas()
+    Draw.setColor(COLORS.white)
     -- Draw.drawWrapped(canvas, true, true, -self.world.player.x)
     for i = 1, #self.quads do
 

@@ -38,7 +38,7 @@ function Player:draw()
         self.climb_collider:drawFor(self, 1, 1, 0)
     end
 
-    if self.state == "CLIMB" then
+    if self.state == "CLIMB" and not self.onrotatingtower then
         self:drawClimbReticle()
     end
 end
@@ -324,7 +324,7 @@ function Player:drawClimbReticle()
     local found = 0;
     local _alph;
 
-    if (not self.onrotatingtower and self.jumpchargecon ~= 0) then
+    if (self.jumpchargecon ~= 0) then
         local count = 1;
         
         if (self.jumpchargetimer >= self.chargetime1) then
@@ -439,7 +439,7 @@ function Player:drawClimbReticle()
 
     local drawreticle = true;
 
-    if (drawreticle and self.jumpchargecon ~= 0 and not self.onrotatingtower and found ~= 0) then
+    if (drawreticle and self.jumpchargecon ~= 0 and found ~= 0) then
         local px = 0 - 12;
         local py = 0 - 12;
         
