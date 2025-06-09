@@ -80,12 +80,16 @@ function CylinderTower:drawLayer(func, scale, ...)
         canvas = func
     end
     love.graphics.push()
+    local angle_per_quad = math.rad(360 / #self.quads)
     for i = 1, #self.quads do
         local angle = (i - (#self.quads/2))
-        angle = angle - (((self.world.player.x-120)-(SCREEN_WIDTH/2)) / 20)
-        angle = math.rad(angle * 360 / #self.quads)
+        -- TODO: Find out why the hell this works
+        local weird_magic_offset = -30 + ((self.map.width-16)*20)
+        angle = angle - (((self.world.player.x-(weird_magic_offset))-(SCREEN_WIDTH/2)) / 20)
+        angle = 1 + angle
+        angle = (angle * angle_per_quad)
 
-        local x1, x2 = math.sin(angle-math.rad(360/#self.quads)), math.sin(angle)
+        local x1, x2 = math.sin(angle-angle_per_quad/2), math.sin(angle+angle_per_quad/2)
         -- x1, x2 = (math.abs(x1)^1.1) * Utils.sign(x1), (math.abs(x2)^1.1) * Utils.sign(x2)
         x1, x2 = x1 * 140, x2 * 140
         -- This is basically backface culling lol
