@@ -17,7 +17,7 @@ function CylinderTower:init(map, depth)
     self.quads = {}
     local slice = 0.5
     local tw, th = self.map.tile_width, self.map.tile_height
-        for i = 1, self.map.width, slice do
+        for i = 1, self.map.width+slice, slice do
             table.insert(self.quads,
                 love.graphics.newQuad(
                     (i-1)*th, 0,
@@ -66,7 +66,7 @@ function CylinderTower:draw()
     for i = 1, #self.quads do
 
         local angle = (i - (#self.quads/2))
-        angle = angle - (((self.world.player.x-110)-(SCREEN_WIDTH/2)) / 20)
+        angle = angle - (((self.world.player.x-120)-(SCREEN_WIDTH/2)) / 20)
         angle = math.rad(angle * 360 / #self.quads)
 
         local x1, x2 = math.sin(angle-math.rad(360/#self.quads)), math.sin(angle)
