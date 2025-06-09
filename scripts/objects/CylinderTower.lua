@@ -80,6 +80,7 @@ function CylinderTower:drawLayer(func, scale, ...)
         canvas = func
     end
     love.graphics.push()
+    love.graphics.scale(1 + (((self.map.width-22))/22), 1)
     local angle_per_quad = math.rad(360 / #self.quads)
     for i = 1, #self.quads do
         local angle = (i - (#self.quads/2))
