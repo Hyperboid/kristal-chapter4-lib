@@ -57,14 +57,30 @@ function CylinderTower:draw()
         love.graphics.translate(-self.x, 0)
         return super.draw(self)
     end
-    local canvas = Draw.pushCanvas(self.map.width * self.map.tile_width, self.map.height * self.map.tile_height)
-    super.draw(self)
-    self:drawReticle()
-    Draw.popCanvas()
     Draw.setColor(COLORS.white)
+    self:drawLayer(super.draw, 1)
+    Draw.setColor(COLORS.white)
+    self:drawLayer(self.drawReticle, 1)
     -- Draw.drawWrapped(canvas, true, true, -self.world.player.x)
-    for i = 1, #self.quads do
+end
 
+---@param func function
+---@param scale number? Unused
+---@param ... any
+---@overload fun(canvas:love.Texture, scale:number?)
+function CylinderTower:drawLayer(func, scale, ...)
+    local canvas
+    if type(func) == "function" then
+        local r,g,b,a = love.graphics.getColor()
+        canvas = Draw.pushCanvas(self.map.width * self.map.tile_width, self.map.height * self.map.tile_height)
+        func(self)
+        Draw.popCanvas()
+        love.graphics.setColor(r,g,b,a)
+    else
+        canvas = func
+    end
+    love.graphics.push()
+    for i = 1, #self.quads do
         local angle = (i - (#self.quads/2))
         angle = angle - (((self.world.player.x-120)-(SCREEN_WIDTH/2)) / 20)
         angle = math.rad(angle * 360 / #self.quads)
@@ -77,10 +93,12 @@ function CylinderTower:draw()
             local quad = self.quads[i]
             local sx = (x2 - x1) / select(3, quad:getViewport())
             local luma = sx
+            sx = sx
             Draw.setColor({luma,luma,luma,1})
             Draw.draw(canvas, quad, x1, 0, 0, sx, 1)
         end
     end
+    love.graphics.pop()
 end
 
 return CylinderTower
