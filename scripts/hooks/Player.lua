@@ -13,8 +13,10 @@ function Player:init(chara, x, y)
     self.jumpchargesfx:setVolume(0.3)
     self.jumpchargecon = 0
     self.jumpchargetimer = 0
-    self.chargetime1 = 10
-    self.chargetime2 = 22
+    self.charge_times = {
+        10,
+        22,
+    }
     self.draw_reticle = true
     self.onrotatingtower = false
     self.climbtimer = -1
@@ -139,14 +141,14 @@ function Player:processJumpCharge()
 
             self.jumpchargetimer = self.jumpchargetimer + DTMULT;
 
-            if (self.jumpchargetimer >= self.chargetime1) then
+            if (self.jumpchargetimer >= self.charge_times[1]) then
                 self.sprite:setFrame(2);
                 self.jumpchargesfx:setPitch(0.5)
                 self.jumpchargeamount = 2;
                 self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.2 + (math.floor(math.sin(self.jumpchargetimer / 2)) * 0.2));
             end
 
-            if (self.jumpchargetimer >= self.chargetime2) then
+            if (self.jumpchargetimer >= self.charge_times[2]) then
                 self.sprite:setFrame(3)
                 self.jumpchargeamount = 3;
                 self.jumpchargesfx:setPitch(0.7)
@@ -342,11 +344,11 @@ function Player:drawClimbReticle()
     if (self.jumpchargecon ~= 0) then
         local count = 1;
 
-        if (self.jumpchargetimer >= self.chargetime1) then
+        if (self.jumpchargetimer >= self.charge_times[1]) then
             count = 2;
         end
 
-        if (self.jumpchargetimer >= self.chargetime2) then
+        if (self.jumpchargetimer >= self.charge_times[2]) then
             count = 3;
         end
 
@@ -428,7 +430,7 @@ function Player:drawClimbReticle()
                 --left, top,
                 0, 0,
                 --width, height,
-                22, (self.jumpchargetimer / self.chargetime2) * 62,
+                22, (self.jumpchargetimer / self.charge_times[2]) * 62,
                 --x, y,
                 x + xoff, y + yoff,
                 --xscale, yscale,
@@ -441,7 +443,7 @@ function Player:drawClimbReticle()
                 0.85
             );
         ]]
-        local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(self.jumpchargetimer / self.chargetime2, 0, 1) * 62), 22, 62)
+        local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(self.jumpchargetimer / self.charge_times[2], 0, 1) * 62), 22, 62)
         Draw.setColor(col)
         Draw.draw(Assets.getFrames("ui/climb/hint")[Utils.clampWrap(math.floor(RUNTIME * 15), 1,4)], quad, xoff/2, yoff/2, -math.rad(angle))
     end
