@@ -267,8 +267,7 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["map"] = "tower2",
-            ["marker"] = "entry"
+            ["map"] = "tower2"
           }
         }
       }

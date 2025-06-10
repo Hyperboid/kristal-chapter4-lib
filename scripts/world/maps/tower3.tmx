@@ -88,7 +88,6 @@
   <object id="15" name="transition" x="0" y="-40" width="400" height="40">
    <properties>
     <property name="map" value="tower2"/>
-    <property name="marker" value="entry"/>
    </properties>
   </object>
  </objectgroup>
