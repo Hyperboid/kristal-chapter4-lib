@@ -5,6 +5,7 @@ function event:init(data)
     super.init(self, data)
     local properties = data and data.properties or {}
     self.up = properties.up or false
+    self.yoffset = properties.yoff or (self.up and -5 or (self.height + 40))
 end
 
 ---@param player Player
@@ -49,11 +50,7 @@ function event:preClimbEnter(player)
     if player.state_manager.state == "CLIMB" then
         player:setState("WALK")
         local tx, ty = player.x, self.y
-        if self.up then
-            ty = ty - 5
-        else
-            ty = ty + self.height + 40
-        end
+        ty = ty + self.yoffset
         ---@param cutscene WorldCutscene
         ---@diagnostic disable-next-line: param-type-mismatch
         self.world:startCutscene(function (cutscene)
