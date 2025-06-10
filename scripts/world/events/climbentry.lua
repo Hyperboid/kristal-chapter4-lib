@@ -27,18 +27,18 @@ function event:onInteract(player, dir)
     ---@param cutscene WorldCutscene
     ---@diagnostic disable-next-line: param-type-mismatch
     self.world:startCutscene(function (cutscene)
-        cutscene:detachFollowers()
         local tx, ty = Utils.round(player.x-(self.x+20), 40)+(self.x+20), Utils.round(self.y, 40)
         if dir == "down" then
             ty = ty + 80
         else
             ty = ty - 40
         end
-
+        
         Assets.playSound("wing")
         player.sprite:set("jump_ball")
         cutscene:wait(cutscene:jumpTo(player,tx,ty,10,.5))
         player:resetSprite()
+        cutscene:detachFollowers()
         Assets.playSound("noise")
         player:setState("CLIMB")
     end)
@@ -60,14 +60,19 @@ function event:preClimbEnter(player)
             player:resetSprite()
             Assets.playSound("noise")
             local id = "climb_fade"
-            for _,follower in ipairs(self.world.followers) do
+            for i,follower in ipairs(self.world.followers) do
                 local mask = follower:getFX(id)
                 if mask then
                     self.world.timer:tween(10/30, mask, {alpha = 1}, nil, function ()
                         follower:removeFX(mask)
                     end)
                 end
+                -- TODO: Support parties > 3
+                follower:setPosition(tx + (i == 1 and -30 or 30), ty + (self.up and 10 or -10))
+                follower:setFacing(player.facing)
             end
+            cutscene:interpolateFollowers()
+            cutscene:attachFollowers()
         end)
     end
 end
