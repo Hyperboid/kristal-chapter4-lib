@@ -13,6 +13,7 @@ function ProphecyScrollFX:init(texture, priority)
     self.secondary_color = {1, 1, 1}
     self.secondary_offset = 100
     self.secondary_timescale = 1
+    self.secondary_texture = Assets.getTexture("backgrounds/perlin_noise_looping")
 end
 
 function ProphecyScrollFX:update()
@@ -46,8 +47,11 @@ function ProphecyScrollFX:draw(texture)
         love.graphics.setShader(last_shader)
     end, "replace", 1)
     t = (t * self.secondary_timescale) + self.secondary_offset
-    Draw.setColor(self.secondary_color)
+    Draw.setColor(self.color)
     Draw.drawWrapped(self.texture, true, true, t+ox, t+oy, 0, 2,2)
+    love.graphics.setBlendMode("add")
+    Draw.drawWrapped(self.secondary_texture, true, true, t+ox, t+oy, 0, 2, 2)
+    love.graphics.setBlendMode("alpha")
     love.graphics.setStencilTest()
 end
 
