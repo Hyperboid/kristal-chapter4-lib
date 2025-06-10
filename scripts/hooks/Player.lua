@@ -141,17 +141,20 @@ function Player:processJumpCharge()
 
             self.jumpchargetimer = self.jumpchargetimer + DTMULT;
 
-            if (self.jumpchargetimer >= self.charge_times[1]) then
-                self.sprite:setFrame(2);
-                self.jumpchargesfx:setPitch(0.5)
-                self.jumpchargeamount = 2;
-                self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.2 + (math.floor(math.sin(self.jumpchargetimer / 2)) * 0.2));
+            for i = 1, #self.charge_times-1 do
+                if (self.jumpchargetimer >= self.charge_times[i]) then
+                    self.sprite:setFrame(Utils.clamp(i+1, 1, #self.sprite.frames))
+                    self.jumpchargesfx:setPitch(0.5 + (i-1)/10)
+                    self.jumpchargeamount = i+1;
+                    self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.2 + (math.floor(math.sin(self.jumpchargetimer / 2)) * 0.2));
+                end
             end
 
+
             if (self.jumpchargetimer >= self.charge_times[#self.charge_times]) then
-                self.sprite:setFrame(3)
+                self.sprite:setFrame(Utils.clamp(#self.charge_times+1, 1, #self.sprite.frames))
                 self.jumpchargeamount = (#self.charge_times+1);
-                self.jumpchargesfx:setPitch(0.7)
+                self.jumpchargesfx:setPitch(0.5 + (#self.charge_times)/10)
                 self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.4 + (math.floor(math.sin(self.jumpchargetimer)) * 0.4));
 
                 if ((self.jumpchargetimer % 8) == 0) then
