@@ -17,28 +17,28 @@ function CylinderTower:init(map, depth)
     self.quads = {}
     local slice = 0.5
     local tw, th = self.map.tile_width, self.map.tile_height
-        for i = 1, self.map.width+slice, slice do
-            table.insert(self.quads,
-                love.graphics.newQuad(
-                    (i-1)*th, 0,
-                    tw*slice, th*self.map.height,
-                    tw*self.map.width, th*self.map.height
-                )
+    for i = 1, self.map.width+slice, slice do
+        table.insert(self.quads,
+            love.graphics.newQuad(
+                (i-1)*th, 0,
+                tw*slice, th*self.map.height,
+                tw*self.map.width, th*self.map.height
             )
-        end
+        )
+    end
+
+    self.world.camera.tower = self
+    Game.stage.timer:after(0, function ()
+        self:postLoad()
+    end)
+    self.parallax_x = 0
 end
 
-function CylinderTower:updateParallax()
+function CylinderTower:postLoad()
     for _, layer in ipairs(self.map.tile_layers) do
         ---@cast layer TileLayer
         layer.wrap_x = true
-        layer.x = layer.init_x + (self.world.player.x - (SCREEN_WIDTH/2))
     end
-end
-
-function CylinderTower:update()
-    super.update(self)
-    self:updateParallax()
 end
 
 function CylinderTower:addLayer(layer, depth)
@@ -104,6 +104,7 @@ function CylinderTower:drawLayer(func, scale, ...)
         angle = (angle * angle_per_quad)
 
         local x1, x2 = math.sin(angle-angle_per_quad/2), math.sin(angle+angle_per_quad/2)
+        x1,x2 = math.abs(x1)*Utils.sign(x1), math.abs(x2)*Utils.sign(x2)
         -- x1, x2 = (math.abs(x1)^1.1) * Utils.sign(x1), (math.abs(x2)^1.1) * Utils.sign(x2)
         x1, x2 = x1 * 140, x2 * 140
         -- This is basically backface culling lol

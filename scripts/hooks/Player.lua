@@ -529,11 +529,14 @@ end
 
 function Player:applyTransformTo(transform, floor_x, floor_y)
     local orig_x = self.x
+    local orig_px = self.parallax_x
     if self.onrotatingtower and Object.CACHE_ATTEMPTS <= 0 then
         self.x = SCREEN_WIDTH/2
+        self.parallax_x = 0
     end
     super.applyTransformTo(self, transform, floor_x, floor_y)
     self.x = orig_x
+    self.parallax_x = orig_px
 end
 
 
