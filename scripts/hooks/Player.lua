@@ -17,12 +17,12 @@ function Player:init(chara, x, y)
     self.chargetime2 = 22
     self.draw_reticle = true
     self.onrotatingtower = false
-    self.fastClimb = false
-    self.climbtimer = 0
+    self.climbtimer = -1
 end
 
 function Player:beginClimb(last_state)
     self:setSprite("climb/climb")
+    self.climbtimer = -1
     self.world.can_open_menu = false
 end
 
@@ -176,7 +176,7 @@ function Player:processJumpCharge()
             self.climbcon = 1;
             self.color = COLORS.white
             self.jumpchargesfx:stop()
-            self.fastClimb = true
+            self.climbtimer = 0
         end
 
         if (docharge == 2) then
@@ -197,14 +197,11 @@ end
 ---@return Object? obj The object, if any, responsible for this outcome.
 function Player:canClimb(dx, dy)
     if (self.climbtimer >= 24) and (self.jumpchargeamount == 3) then
-        self.fastClimb = false
-        self.climbtimer = 0
+        self.climbtimer = -1
     elseif (self.climbtimer >= 12) and (self.jumpchargeamount == 2) then
-        self.fastClimb = false
-        self.climbtimer = 0
+        self.climbtimer = -1
     elseif (self.climbtimer >= 6) and (self.jumpchargeamount == 1) then
-        self.fastClimb = false
-        self.climbtimer = 0
+        self.climbtimer = -1
     end
     Object.startCache()
     local climbarea
@@ -253,7 +250,7 @@ function Player:doClimbJump(direction, distance)
     })[direction])
     -- Logic dictates that duration calc goes in the loop. Nope!
     local duration = (8/30)
-    if self.fastClimb == true then
+    if self.climbtimer >= 0 then
         duration = (4/30)
     end
     if charged then
@@ -299,12 +296,12 @@ function Player:doClimbJump(direction, distance)
                 end
                 if obj and obj.onClimbEnter then
                     obj:onClimbEnter(self)
-                    fastClimb = false
+                    self.climbtimer = -1
                 end
             end)
         elseif dist == 1 and not obj then
             Assets.playSound("bump")
-            self.fastClimb = false
+            self.climbtimer = 1
             -- TODO: use the correct sprite
             if self.facing == "left" then
                 self:setSprite("climb/climb")
@@ -491,7 +488,7 @@ function Player:updateClimb()
         else
             self.jumpchargesfx:stop()
         end
-        if self.fastClimb == true then
+        if self.climbtimer >= 0 then
             self.climbtimer = self.climbtimer + DTMULT
         end
     end
