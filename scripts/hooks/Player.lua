@@ -301,7 +301,7 @@ function Player:doClimbJump(direction, distance)
             end)
         elseif dist == 1 and not obj then
             Assets.playSound("bump")
-            self.climbtimer = 1
+            self.climbtimer = -1
             -- TODO: use the correct sprite
             if self.facing == "left" then
                 self:setSprite("climb/climb")
