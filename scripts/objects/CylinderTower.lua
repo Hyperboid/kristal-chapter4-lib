@@ -104,7 +104,6 @@ function CylinderTower:drawLayer(func, scale, ...)
         angle = (angle * angle_per_quad)
 
         local x1, x2 = math.sin(angle-angle_per_quad/2), math.sin(angle+angle_per_quad/2)
-        x1,x2 = math.abs(x1)*Utils.sign(x1), math.abs(x2)*Utils.sign(x2)
         -- x1, x2 = (math.abs(x1)^1.1) * Utils.sign(x1), (math.abs(x2)^1.1) * Utils.sign(x2)
         x1, x2 = x1 * 140, x2 * 140
         -- This is basically backface culling lol
