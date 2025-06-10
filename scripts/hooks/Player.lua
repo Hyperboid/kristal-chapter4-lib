@@ -17,6 +17,8 @@ function Player:init(chara, x, y)
     self.chargetime2 = 22
     self.draw_reticle = true
     self.onrotatingtower = false
+    self.fastClimb = false
+    self.climbtimer = 0
 end
 
 function Player:beginClimb(last_state)
@@ -114,18 +116,18 @@ function Player:processJumpCharge()
         -- sprite_index = spr_kris_climb_new_charge;
         -- image_index = 0;
     end
-    
+
     if (self.jumpchargecon == 2) then
         local docharge = 0
-        
+
         if (Input.down("confirm") or self.jumpchargetimer < 3) then
             docharge = 1;
         end
-        
+
         if (Input.pressed("confirm")) then
             docharge = 2;
         end
-        
+
         if (docharge == 1) then
             if (self.facing == "up" or self.facing == "down") then
                 self:setSprite("climb/charge/up");
@@ -134,22 +136,22 @@ function Player:processJumpCharge()
             else
                 self:setSprite("climb/charge/left");
             end
-            
+
             self.jumpchargetimer = self.jumpchargetimer + DTMULT;
-            
+
             if (self.jumpchargetimer >= self.chargetime1) then
                 self.sprite:setFrame(2);
                 self.jumpchargesfx:setPitch(0.5)
                 self.jumpchargeamount = 2;
                 self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.2 + (math.floor(math.sin(self.jumpchargetimer / 2)) * 0.2));
             end
-            
+
             if (self.jumpchargetimer >= self.chargetime2) then
                 self.sprite:setFrame(3)
                 self.jumpchargeamount = 3;
                 self.jumpchargesfx:setPitch(0.7)
                 self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.4 + (math.floor(math.sin(self.jumpchargetimer)) * 0.4));
-                
+
                 if ((self.jumpchargetimer % 8) == 0) then
                     self.draw_reticle = false
                     local afterimage = AfterImage(self, 0.3, ((1 / (0.2)) / 30 * 0.3));
@@ -158,7 +160,7 @@ function Player:processJumpCharge()
                     afterimage.graphics.grow = 0.05
                     afterimage.physics.speed_y = 1
                     afterimage:setParent(self)
-                    
+
                     -- TODO: ahaHAHHAHAHAHHAAHAHA
                     -- if (i_ex(obj_rotating_tower_controller_new) && i_ex(obj_climb_kris)) then
                     --     afterimage.x = obj_rotating_tower_controller_new.tower_x;
@@ -167,15 +169,16 @@ function Player:processJumpCharge()
                 end
             end
         end
-        
+
         if (docharge == 0) then
             self.jumpchargecon = 0;
             self.climb_jumping = 1;
             self.climbcon = 1;
             self.color = COLORS.white
             self.jumpchargesfx:stop()
+            self.fastClimb = true
         end
-        
+
         if (docharge == 2) then
             -- snd_play(182, 0.7, 0.4);
             -- snd_play(181, 0.7, 0.4);
@@ -193,6 +196,16 @@ end
 ---@return boolean allowed
 ---@return Object? obj The object, if any, responsible for this outcome.
 function Player:canClimb(dx, dy)
+    if (self.climbtimer >= 24) and (self.jumpchargeamount == 3) then
+        self.fastClimb = false
+        self.climbtimer = 0
+    elseif (self.climbtimer >= 12) and (self.jumpchargeamount == 2) then
+        self.fastClimb = false
+        self.climbtimer = 0
+    elseif (self.climbtimer >= 6) and (self.jumpchargeamount == 1) then
+        self.fastClimb = false
+        self.climbtimer = 0
+    end
     Object.startCache()
     local climbarea
     local trigger
@@ -229,12 +242,9 @@ end
 function Player:doClimbJump(direction, distance)
     direction = direction or self.facing
     self:setFacing(direction)
-    
+
     local charged = (distance ~= nil)
     distance = distance or 1
-    if direction == "left" or direction == "right" then
-        self.last_x_climb = direction
-    end
     local dx, dy = unpack(({
         up = {0, -1},
         down = {0, 1},
@@ -243,6 +253,9 @@ function Player:doClimbJump(direction, distance)
     })[direction])
     -- Logic dictates that duration calc goes in the loop. Nope!
     local duration = (8/30)
+    if self.fastClimb == true then
+        duration = (4/30)
+    end
     if charged then
         duration = (3/30) * distance
     end
@@ -286,18 +299,20 @@ function Player:doClimbJump(direction, distance)
                 end
                 if obj and obj.onClimbEnter then
                     obj:onClimbEnter(self)
+                    fastClimb = false
                 end
             end)
         elseif dist == 1 and not obj then
             Assets.playSound("bump")
+            self.fastClimb = false
             -- TODO: use the correct sprite
-            if self.last_x_climb == "left" then
-                self:setSprite("climb/slip_left")
+            if self.facing == "left" then
+                self:setSprite("climb/climb")
             else
-                self:setSprite("climb/slip_right")
+                self:setSprite("climb/climb")
             end
             -- self.sprite:setFrame(2)
-            self.climb_delay = 7/30
+            self.climb_delay = 4/30
         end
         if dist <= 1 and obj and obj.preClimbEnter then
             obj:preClimbEnter(self)
@@ -329,18 +344,18 @@ function Player:drawClimbReticle()
 
     if (self.jumpchargecon ~= 0) then
         local count = 1;
-        
+
         if (self.jumpchargetimer >= self.chargetime1) then
             count = 2;
         end
-        
+
         if (self.jumpchargetimer >= self.chargetime2) then
             count = 3;
         end
-        
+
         local px = 0;
         local py = 0;
-        
+
         for i = 1, count do
             -- with (instance_place(px, py, obj_climbstarter))
             -- {
@@ -350,19 +365,19 @@ function Player:drawClimbReticle()
             --         break;
             --     }
             -- }
-            
+
             if (self.facing == "down") then
                 py = 0+i;
             end
-            
+
             if (self.facing == "right") then
                 px = 0+i;
             end
-            
+
             if (self.facing == "up") then
                 py = 0-i;
             end
-            
+
             if (self.facing == "left") then
                 px = 0-i;
             end
@@ -371,39 +386,39 @@ function Player:drawClimbReticle()
                 found = i
             end
         end
-        
+
         _alph = Utils.clamp(self.jumpchargetimer / 14, 0.1, 0.8);
         local angle = 0;
         local xoff = 0;
         local yoff = 0;
-        
+
         if (self.facing == "down") then
             angle = 0;
             xoff = -22;
             yoff = 18;
         end
-        
+
         if (self.facing == "right") then
             angle = 90;
             xoff = 18;
             yoff = 22;
         end
-        
+
         if (self.facing == "up") then
             angle = 180;
             xoff = 22;
             yoff = -18;
         end
-        
+
         if (self.facing == "left") then
             angle = 270;
             xoff = -18;
             yoff = -22;
         end
-        
+
         -- TODO: Put these colors in the PALETTE
         local col = {200/255, 200/255, 200/255};
-        
+
         if (found ~= 0) then
             col = {255/255, 200/255, 132/255};
         end
@@ -445,23 +460,23 @@ function Player:drawClimbReticle()
     if (drawreticle and self.jumpchargecon ~= 0 and found ~= 0) then
         local px = 0 - 12;
         local py = 0 - 12;
-        
+
         if (self.facing == "down") then
             py = py + (20 * found);
         end
-        
+
         if (self.facing == "right") then
             px = px + (20 * found);
         end
-        
+
         if (self.facing == "up") then
             py = px - (20 * found);
         end
-        
+
         if (self.facing == "left") then
             px = px - (20 * found);
         end
-        
+
         Draw.setColor(Utils.lerp(COLORS.yellow, COLORS.white, 0.4 + (math.sin(self.jumpchargetimer / 3) * 0.4)));
         Draw.draw(Assets.getTexture("ui/climb/reticle"), px, py)
     end
@@ -475,6 +490,9 @@ function Player:updateClimb()
             self:processJumpCharge()
         else
             self.jumpchargesfx:stop()
+        end
+        if self.fastClimb == true then
+            self.climbtimer = self.climbtimer + DTMULT
         end
     end
     -- Placeholder, obviously.
