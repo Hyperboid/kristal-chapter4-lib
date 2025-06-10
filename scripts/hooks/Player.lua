@@ -148,9 +148,9 @@ function Player:processJumpCharge()
                 self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.2 + (math.floor(math.sin(self.jumpchargetimer / 2)) * 0.2));
             end
 
-            if (self.jumpchargetimer >= self.charge_times[2]) then
+            if (self.jumpchargetimer >= self.charge_times[#self.charge_times]) then
                 self.sprite:setFrame(3)
-                self.jumpchargeamount = 3;
+                self.jumpchargeamount = (#self.charge_times+1);
                 self.jumpchargesfx:setPitch(0.7)
                 self.color = Utils.lerp(COLORS.white, COLORS.teal, 0.4 + (math.floor(math.sin(self.jumpchargetimer)) * 0.4));
 
@@ -344,12 +344,10 @@ function Player:drawClimbReticle()
     if (self.jumpchargecon ~= 0) then
         local count = 1;
 
-        if (self.jumpchargetimer >= self.charge_times[1]) then
-            count = 2;
-        end
-
-        if (self.jumpchargetimer >= self.charge_times[2]) then
-            count = 3;
+        for i = 1, #self.charge_times do
+            if self.jumpchargetimer > self.charge_times[i] then
+                count = i + 1
+            end
         end
 
         local px = 0;
@@ -443,9 +441,29 @@ function Player:drawClimbReticle()
                 0.85
             );
         ]]
-        local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(self.jumpchargetimer / self.charge_times[2], 0, 1) * 62), 22, 62)
+        -- local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(self.jumpchargetimer / self.charge_times[2], 0, 1) * 62), 22, 62)
         Draw.setColor(col)
-        Draw.draw(Assets.getFrames("ui/climb/hint")[Utils.clampWrap(math.floor(RUNTIME * 15), 1,4)], quad, xoff/2, yoff/2, -math.rad(angle))
+        local frame = Utils.clampWrap(math.floor(RUNTIME * 15), 1,4)
+        -- Draw.draw(Assets.getFrames("ui/climb/hint")[frame], quad, xoff/2, yoff/2, -math.rad(angle))
+        love.graphics.push()
+        love.graphics.translate(xoff/2, yoff/2)
+        love.graphics.rotate(-math.rad(angle))
+        local w = (self.jumpchargetimer / self.charge_times[#self.charge_times]) * (#self.charge_times+1)
+        for i = 0, #self.charge_times do
+            local id, h = "ui/climb/hint_mid", 20
+            if i == 0 then
+                id = "ui/climb/hint_start"
+                h = 21
+            elseif i == #self.charge_times then
+                id = "ui/climb/hint_end"
+                h = 21
+            end
+            local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(w - i, 0, 1) * h), 22, h)
+            Draw.draw(Assets.getFrames(id)[frame], quad)
+            love.graphics.translate(0, h)
+
+        end
+        love.graphics.pop()
     end
 
     if (DEBUG_RENDER) then
