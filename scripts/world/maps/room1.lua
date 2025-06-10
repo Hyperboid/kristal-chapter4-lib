@@ -697,7 +697,8 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["text"] = "THE FALSE PLUEPHETS WILL DECIEVE THE MASSES."
+            ["text"] = "THE FALSE PLUEPHETS WILL DECIEVE THE MASSES.",
+            ["texture"] = "prophecies/falsepluephets"
           }
         },
         {
@@ -839,8 +840,8 @@ return {
           name = "spawn",
           type = "",
           shape = "point",
-          x = 298,
-          y = 1360,
+          x = 100,
+          y = 680,
           width = 0,
           height = 0,
           rotation = 0,

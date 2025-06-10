@@ -148,6 +148,7 @@ you.</property>
   <object id="41" name="prophecy" x="160" y="720" width="280" height="120">
    <properties>
     <property name="text" value="THE FALSE PLUEPHETS WILL DECIEVE THE MASSES."/>
+    <property name="texture" value="prophecies/falsepluephets"/>
    </properties>
   </object>
   <object id="42" name="prophecy" x="960" y="280" width="280" height="120">
@@ -186,7 +187,7 @@ you.</property>
   </object>
  </objectgroup>
  <objectgroup color="#7f00ff" id="5" name="markers">
-  <object id="20" name="spawn" x="298" y="1360">
+  <object id="20" name="spawn" x="100" y="680">
    <properties>
     <property name="comment" value="Like, Titan spawn?"/>
    </properties>
