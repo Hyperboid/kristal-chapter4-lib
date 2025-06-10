@@ -28,6 +28,19 @@ function CylinderTower:init(map, depth)
         end
 end
 
+function CylinderTower:updateParallax()
+    for _, layer in ipairs(self.map.tile_layers) do
+        ---@cast layer TileLayer
+        layer.wrap_x = true
+        layer.x = layer.init_x + (self.world.player.x - (SCREEN_WIDTH/2))
+    end
+end
+
+function CylinderTower:update()
+    super.update(self)
+    self:updateParallax()
+end
+
 function CylinderTower:addLayer(layer, depth)
     local tilelayer = TileLayer(self.map, layer)
     table.insert(self.layers, tilelayer)

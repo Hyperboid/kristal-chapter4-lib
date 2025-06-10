@@ -11,6 +11,7 @@ function event:init(data)
     if properties.text then
         self:setText(properties.text)
     end
+    self.container = Object(0,0)
 end
 
 function event:getSortPosition()
@@ -31,20 +32,19 @@ end
 function event:setText(text)
     if self.text then self.text:remove() end
     if not text then return end
-    self.text = Text(text)
-    self:addChild(self.text)
-end
+    self.text = Text(text, self.width/2, -self.height, {auto_size = true})
+    self.text:setOrigin(0.5, 1)
 
-function event:applyTransformTo(transform, floor_x,floor_y)
-    local yoff = Utils.wave(RUNTIME*math.pi/2, -20, 20)
-    if floor_y then
-        yoff = Utils.floor(yoff, floor_y)
-    end
-    super.applyTransformTo(self,transform,floor_x,floor_y)
+    self.text:addFX(ProphecyScrollFX())
+    self:addChild(self.text)
 end
 
 function event:update()
     super.update(self)
+    if self.sprite then
+        self.sprite.y = Utils.wave(RUNTIME*2, -10, 10)
+        
+    end
     Object.startCache()
     if self:collidesWith(self.world.player) then
         self.afx.alpha = Utils.approach(self.afx.alpha, 1, DT*4)
