@@ -182,6 +182,13 @@ function Player:processJumpCharge()
             self.color = COLORS.white
             self.jumpchargesfx:stop()
             self.climbtimer = 0
+            if (self.jumpchargeamount == 3) then
+                self.climbtimer = 12
+            elseif (self.jumpchargeamount == 2) then
+                self.climbtimer = 6
+            elseif (self.jumpchargeamount == 1) then
+                self.climbtimer = 3
+            end
         end
 
         if (docharge == 2) then
@@ -201,13 +208,6 @@ end
 ---@return boolean allowed
 ---@return Object? obj The object, if any, responsible for this outcome.
 function Player:canClimb(dx, dy)
-    if (self.climbtimer >= 24) and (self.jumpchargeamount == 3) then
-        self.climbtimer = -1
-    elseif (self.climbtimer >= 12) and (self.jumpchargeamount == 2) then
-        self.climbtimer = -1
-    elseif (self.climbtimer >= 6) and (self.jumpchargeamount == 1) then
-        self.climbtimer = -1
-    end
     Object.startCache()
     local climbarea
     local trigger
@@ -515,7 +515,7 @@ function Player:updateClimb()
             self.jumpchargesfx:stop()
         end
         if self.climbtimer >= 0 then
-            self.climbtimer = self.climbtimer + DTMULT
+            self.climbtimer = self.climbtimer - DTMULT
         end
     end
     -- Placeholder, obviously.
