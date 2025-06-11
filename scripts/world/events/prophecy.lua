@@ -9,7 +9,7 @@ function event:init(data)
     if properties.texture then
         self:setSprite(properties.texture)
     end
-    self.afx = self:addFX(AlphaFX(1))
+    self.afx = self:addFX(AlphaFX(0))
     if properties.text then
         self:setText(properties.text)
     end
