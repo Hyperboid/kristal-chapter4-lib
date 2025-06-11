@@ -27,7 +27,9 @@ function event:onInteract(player, dir)
     ---@param cutscene WorldCutscene
     ---@diagnostic disable-next-line: param-type-mismatch
     self.world:startCutscene(function (cutscene)
-        local tx, ty = Utils.round(player.x-(self.x+20), 40)+(self.x+20), Utils.round(self.y, 40)
+        local tx = Utils.round(player.x-(self.x+20), 40)+(self.x+20)
+        tx = Utils.clamp(tx, self.x+20, self.x+self.width-20)
+        local ty = Utils.round(self.y, 40)
         if dir == "down" then
             ty = ty + 80
         else
