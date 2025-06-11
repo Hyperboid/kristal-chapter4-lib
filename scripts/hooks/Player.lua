@@ -317,7 +317,7 @@ function Player:doClimbJump(direction, distance)
             Assets.playSound("bump")
             self.climb_speedboost = -1
             -- TODO: use the correct sprite
-            if self.facing == "left" then
+            if self.last_x_climb == "left" then
                 self:setSprite("climb/slip_left")
             else
                 self:setSprite("climb/slip_right")
