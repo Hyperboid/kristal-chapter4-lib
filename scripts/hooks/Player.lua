@@ -23,7 +23,10 @@ function Player:init(chara, x, y)
 end
 
 function Player:beginClimb(last_state)
-    self:setSprite("climb/climb")
+    if self.sprite.sprite_options[2] ~= "climb/climb" then
+        self:setSprite("climb/climb")
+        self.sprite:setFrame(1)
+    end
     self.climb_speedboost = -1
     self.world.can_open_menu = false
 end
@@ -65,6 +68,7 @@ function Player:processClimbInputs()
 
             if self.sprite.sprite_options[2] ~= "climb/climb" then
                 self:setSprite("climb/climb")
+                self.sprite:setFrame(1)
             end
         end
         return
@@ -276,7 +280,7 @@ function Player:doClimbJump(direction, distance)
                 end
                 self.sprite:play(0.1, true)
             else
-                self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
+                self.sprite:setFrame(Utils.clampWrap(Utils.floor(self.sprite.frame + 1, 2), 1, #self.sprite.frames))
             end
             self:slideTo(self.x + (dx*40*dist), self.y + (dy*40*dist), duration, "linear", function ()
                 if charged then
@@ -285,7 +289,7 @@ function Player:doClimbJump(direction, distance)
                     elseif (self.jumpchargeamount == 2) then
                         self.climb_speedboost = 6
                     elseif (self.jumpchargeamount == 1) then
-                        self.climb_speedboost = 4
+                        self.climb_speedboost = 2
                     end
                 end
                 self.climb_delay = 2/30
