@@ -602,7 +602,7 @@ return {
           visible = true,
           properties = {
             ["text1"] = "* Silence echoes in the darkness\nof this familiar-yet-different\nscenery.",
-            ["text2"] = "* The power of sometimes avoiding copying\nofficial music from a paid game shines within\nyou."
+            ["text2"] = "[font:legend,2]* The power of sometimes avoiding copying\nofficial music from a paid game shines within\nyou."
           }
         },
         {
