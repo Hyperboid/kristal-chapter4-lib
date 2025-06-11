@@ -49,7 +49,7 @@ end
 
 function ProphecyScrollFX:drawPart(texture, min, max, alpha)
 
-    local _cx, _cy = self.parent:getScreenPos()
+    local _cx, _cy = self.parent.parent.parent:getScreenPos()
     _cx, _cy = -_cx, -_cy
 
     local surf_textured = Draw.pushCanvas(640, 480);
@@ -60,10 +60,11 @@ function ProphecyScrollFX:drawPart(texture, min, max, alpha)
     draw_sprite_tiled_ext(pnl_tex, 0, 0, 0, 1, 1, Utils.hexToRgb"#42D0FF", alpha)
     Draw.popCanvas(true)
     self.tick = self.tick + (((1/15) * self.scroll_speed) * DTMULT);
-    draw_sprite_tiled_ext(Assets.getTexture("backgrounds/IMAGE_DEPTH_EXTEND_MONO_SEAMLESS_BRIGHTER"), 0, -((_cx * 2) + (self.tick * 15)) * 0.5, -((_cy * 2) + (self.tick * 15)) * 0.5, 2, 2, Utils.hexToRgb"#42D0FF", 1);
+    local x, y = -((_cx * 2) + (self.tick * 15)) * 0.5, -((_cy * 2) + (self.tick * 15)) * 0.5
+    draw_sprite_tiled_ext(Assets.getTexture("backgrounds/IMAGE_DEPTH_EXTEND_MONO_SEAMLESS_BRIGHTER"), 0, x, y, 2, 2, Utils.hexToRgb"#42D0FF", 1);
     local orig_bm, orig_am = love.graphics.getBlendMode()
     love.graphics.setBlendMode("add", "premultiplied");
-    draw_sprite_tiled_ext(pnl_canvas, 0, -((_cx * 2) + (self.tick * 15)) * 0.5, -((_cy * 2) + (self.tick * 15)) * 0.5, 2, 2, Utils.hexToRgb"#42D0FF", alpha);
+    draw_sprite_tiled_ext(pnl_canvas, 0, x, y, 2, 2, Utils.hexToRgb"#42D0FF", alpha);
     love.graphics.setBlendMode(orig_bm, orig_am);
     love.graphics.setColorMask(true, true, true, true);
     love.graphics.setColorMask(false, false, false, true);

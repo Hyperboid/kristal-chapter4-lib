@@ -10,7 +10,7 @@ function ProphecyEchoFX:draw(texture)
     local ysin = math.cos((Kristal.getTime()*30) / 12) * 6;
     xsin = ysin
     for i=3,1,-1 do
-        Draw.setColor(COLORS.white, .2)
+        Draw.setColor({0.8,0.8,0.8}, .2)
         Draw.drawCanvas(texture, xsin * i, ysin * i);
         
     end
