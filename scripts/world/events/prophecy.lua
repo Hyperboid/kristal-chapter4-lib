@@ -47,7 +47,7 @@ end
 
 function event:update()
     super.update(self)
-    self.container.y = Utils.wave(RUNTIME*2, -10, 10)
+    self.container.y = Utils.wave(Kristal.getTime()*2, -10, 10)
     if self.sprite and self.text then
         self.text.y = -self.sprite:getScaledHeight() + self.text_offset_y
     else

@@ -39,7 +39,7 @@ end
 
 local function scr_wave(arg0, arg1, arg2, arg3)
     local a4 = (arg1 - arg0) * 0.5;
-    return arg0 + a4 + (math.sin((((RUNTIME * 30 * 0.001) + (arg2 * arg3)) / arg2) * (2 * math.pi)) * a4);
+    return arg0 + a4 + (math.sin((((Kristal.getTime() * 30 * 0.001) + (arg2 * arg3)) / arg2) * (2 * math.pi)) * a4);
 end
 
 function ProphecyScrollFX:draw(texture)

@@ -455,7 +455,7 @@ function Player:drawClimbReticle()
         ]]
         -- local quad = Assets.getQuad(0, 0, 22, math.floor(Utils.clamp(self.jumpchargetimer / self.charge_times[2], 0, 1) * 62), 22, 62)
         Draw.setColor(col)
-        local frame = Utils.clampWrap(math.floor(RUNTIME * 15), 1,4)
+        local frame = Utils.clampWrap(math.floor(Kristal.getTime() * 15), 1,4)
         -- Draw.draw(Assets.getFrames("ui/climb/hint")[frame], quad, xoff/2, yoff/2, -math.rad(angle))
         love.graphics.push()
         love.graphics.translate(xoff/2, yoff/2)
