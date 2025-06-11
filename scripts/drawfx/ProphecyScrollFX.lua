@@ -59,7 +59,7 @@ function ProphecyScrollFX:drawPart(texture, min, max, alpha)
     local pnl_canvas = Draw.pushCanvas(pnl_tex:getDimensions())
     draw_sprite_tiled_ext(pnl_tex, 0, 0, 0, 1, 1, Utils.hexToRgb"#42D0FF", alpha)
     Draw.popCanvas(true)
-    self.tick = self.tick + ((1/15) * self.scroll_speed);
+    self.tick = self.tick + (((1/15) * self.scroll_speed) * DTMULT);
     draw_sprite_tiled_ext(Assets.getTexture("backgrounds/IMAGE_DEPTH_EXTEND_MONO_SEAMLESS_BRIGHTER"), 0, -((_cx * 2) + (self.tick * 15)) * 0.5, -((_cy * 2) + (self.tick * 15)) * 0.5, 2, 2, Utils.hexToRgb"#42D0FF", 1);
     local orig_bm, orig_am = love.graphics.getBlendMode()
     love.graphics.setBlendMode("add", "premultiplied");
@@ -98,52 +98,5 @@ function ProphecyScrollFX:drawPart(texture, min, max, alpha)
     love.graphics.setStencilTest()
 end
 
-
-function ProphecyScrollFX:drawPartTwo(texture)
-
-    local _cx, _cy = self.parent:getScreenPos()
-    _cx, _cy = -_cx, -_cy
-
-    local surf_textured = Draw.pushCanvas(640, 480);
-    love.graphics.clear(COLORS.white, 0);
-    love.graphics.setColorMask(true, true, true, false);
-    self.tick = self.tick + ((1/15) * self.scroll_speed);
-    draw_sprite_tiled_ext(Assets.getTexture"backgrounds/IMAGE_DEPTH_EXTEND_MONO_SEAMLESS_BRIGHTER", 0, -((_cx * 2) + (self.tick * 15)) * 0.5, -((_cy * 2) + (self.tick * 15)) * 0.5, 2, 2, Utils.hexToRgb"#42D0FF", 1);
-    local orig_bm, orig_am = love.graphics.getBlendMode()
-    love.graphics.setBlendMode("add", "premultiplied");
-    draw_sprite_tiled_ext(Assets.getTexture"backgrounds/perlin_noise_looping", 0, -((_cx * 2) + (self.tick * 15)) * 0.5, -((_cy * 2) + (self.tick * 15)) * 0.5, 2, 2, Utils.hexToRgb"#42D0FF", scr_wave(0, 0.4, 4, 0));
-    love.graphics.setBlendMode(orig_bm, orig_am);
-    love.graphics.setColorMask(true, true, true, true);
-    love.graphics.setColorMask(false, false, false, true);
-
-    -- with (tile_object)
-    -- {
-    --     if (other.intro_mode)
-    --     {
-    --         local _amt = sin((other.tick / 15) * (2 * pi)) * other.scroll_speed * 6;
-    --         draw_sprite_ext(sprite_index, image_index, x - _cx - _amt, y - _cy - _amt, image_xscale, image_yscale, image_angle, image_blend, image_alpha * 0.4);
-    --         draw_sprite_ext(sprite_index, image_index, (x - _cx) + _amt, (y - _cy) + _amt, image_xscale, image_yscale, image_angle, image_blend, image_alpha * 0.4);
-    --     }
-        
-    --     draw_sprite_ext(sprite_index, image_index, x - _cx, y - _cy, image_xscale, image_yscale, image_angle, image_blend, image_alpha);
-    -- }
-
-    love.graphics.setColorMask(true, true, true, true);
-    Draw.popCanvas()
-
-
-    love.graphics.stencil(function()
-        local last_shader = love.graphics.getShader()
-        local shader = Assets.getShader("limitedmask")
-        shader:send("min", 0.5)
-        shader:send("max", 1)
-        love.graphics.setShader(shader)
-        Draw.draw(texture)
-        love.graphics.setShader(last_shader)
-    end, "replace", 1)
-    love.graphics.setStencilTest("greater", 0)
-    Draw.drawCanvas(surf_textured);
-    love.graphics.setStencilTest()
-end
 
 return ProphecyScrollFX
