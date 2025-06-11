@@ -18,10 +18,8 @@ function event:onInteract(player, dir)
 
     local id = "climb_fade"
     for _,follower in ipairs(self.world.followers) do
-        if not follower:getFX(id) then
-            local mask = follower:addFX(AlphaFX(1), id)
-            self.world.timer:tween(10/30, mask, {alpha = 0})
-        end
+        local mask = follower:addFX(AlphaFX(1), id)
+        self.world.timer:tween(10/30, mask, {alpha = 0})
     end
 
     ---@param cutscene WorldCutscene
