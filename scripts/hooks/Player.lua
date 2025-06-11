@@ -19,12 +19,12 @@ function Player:init(chara, x, y)
     }
     self.draw_reticle = true
     self.onrotatingtower = false
-    self.climbtimer = -1
+    self.climb_speedboost = -1
 end
 
 function Player:beginClimb(last_state)
     self:setSprite("climb/climb")
-    self.climbtimer = -1
+    self.climb_speedboost = -1
     self.world.can_open_menu = false
 end
 
@@ -181,14 +181,7 @@ function Player:processJumpCharge()
             self.climbcon = 1;
             self.color = COLORS.white
             self.jumpchargesfx:stop()
-            self.climbtimer = 0
-            if (self.jumpchargeamount == 3) then
-                self.climbtimer = 12
-            elseif (self.jumpchargeamount == 2) then
-                self.climbtimer = 6
-            elseif (self.jumpchargeamount == 1) then
-                self.climbtimer = 3
-            end
+            self.climb_speedboost = 0
         end
 
         if (docharge == 2) then
@@ -258,9 +251,10 @@ function Player:doClimbJump(direction, distance)
     })[direction])
     -- Logic dictates that duration calc goes in the loop. Nope!
     local duration = (8/30)
-    if self.climbtimer >= 0 then
+    if self.climb_speedboost >= 0 then
         duration = (4/30)
     end
+    self.climb_speedboost = self.climb_speedboost - 1
     if charged then
         duration = (3/30) * distance
     end
@@ -285,6 +279,15 @@ function Player:doClimbJump(direction, distance)
                 self.sprite:setFrame(Utils.clampWrap(self.sprite.frame + 1, 1, #self.sprite.frames))
             end
             self:slideTo(self.x + (dx*40*dist), self.y + (dy*40*dist), duration, "linear", function ()
+                if charged then
+                    if (self.jumpchargeamount == 3) then
+                        self.climb_speedboost = 18
+                    elseif (self.jumpchargeamount == 2) then
+                        self.climb_speedboost = 6
+                    elseif (self.jumpchargeamount == 1) then
+                        self.climb_speedboost = 4
+                    end
+                end
                 self.climb_delay = 2/30
                 if distance ~= 1 then
                     self.climb_delay = 2/30
@@ -304,12 +307,12 @@ function Player:doClimbJump(direction, distance)
                 end
                 if obj and obj.onClimbEnter then
                     obj:onClimbEnter(self)
-                    self.climbtimer = -1
+                    self.climb_speedboost = -1
                 end
             end)
         elseif dist == 1 and not obj then
             Assets.playSound("bump")
-            self.climbtimer = -1
+            self.climb_speedboost = -1
             -- TODO: use the correct sprite
             if self.facing == "left" then
                 self:setSprite("climb/slip_left")
@@ -514,8 +517,8 @@ function Player:updateClimb()
         else
             self.jumpchargesfx:stop()
         end
-        if self.climbtimer >= 0 then
-            self.climbtimer = self.climbtimer - DTMULT
+        if not (Input.down("left") or Input.down("up") or Input.down("right") or Input.down("down")) then
+            self.climb_speedboost = -1
         end
     end
     -- Placeholder, obviously.
