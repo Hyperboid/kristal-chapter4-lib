@@ -252,8 +252,10 @@ function Player:doClimbJump(direction, distance)
     })[direction])
     -- Logic dictates that duration calc goes in the loop. Nope!
     local duration = (8/30)
-    if self.climb_speedboost >= 0 then
+    if self.climb_speedboost > 4 then
         duration = (4/30)
+    elseif self.climb_speedboost > 0 then
+        duration = ((8-self.climb_speedboost)/30)
     end
     self.climb_speedboost = self.climb_speedboost - 1
     if charged then
@@ -286,7 +288,7 @@ function Player:doClimbJump(direction, distance)
                     elseif (self.jumpchargeamount == 2) then
                         self.climb_speedboost = 6
                     elseif (self.jumpchargeamount == 1) then
-                        self.climb_speedboost = 2
+                        self.climb_speedboost = 3
                     end
                 end
                 self.climb_delay = 2/30
