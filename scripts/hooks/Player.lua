@@ -247,6 +247,9 @@ function Player:doClimbJump(direction, distance)
 
     local charged = (distance ~= nil)
     distance = distance or 1
+    if direction == "left" or direction == "right" then
+        self.last_x_climb = direction
+    end
     local dx, dy = unpack(({
         up = {0, -1},
         down = {0, 1},
@@ -309,9 +312,9 @@ function Player:doClimbJump(direction, distance)
             self.climbtimer = -1
             -- TODO: use the correct sprite
             if self.facing == "left" then
-                self:setSprite("climb/climb")
+                self:setSprite("climb/slip_left")
             else
-                self:setSprite("climb/climb")
+                self:setSprite("climb/slip_right")
             end
             -- self.sprite:setFrame(2)
             self.climb_delay = 4/30
