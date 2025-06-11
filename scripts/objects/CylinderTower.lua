@@ -48,6 +48,7 @@ function CylinderTower:addLayer(layer, depth)
 end
 
 function CylinderTower:drawReticle()
+    if not (self.world and self.world.player and self.world.player.onrotatingtower) then return end
     love.graphics.push()
     love.graphics.translate(-self.world.width,0)
     -- TODO: We _probably_ don't strictly need 5 rounds of 
@@ -65,11 +66,14 @@ function CylinderTower:drawReticle()
     love.graphics.pop()
 end
 
-function CylinderTower:draw()
-    if not self.world.player.onrotatingtower then
-        love.graphics.translate(-self.x, 0)
-        return super.draw(self)
+function CylinderTower:getFocusedX()
+    if not (self.world and self.world.player and self.world.player.onrotatingtower) then
+        return 20
     end
+    return self.world.player.x
+end
+
+function CylinderTower:draw()
     Draw.setColor(COLORS.white)
     self:drawLayer(super.draw, 1)
     Draw.setColor(COLORS.white)
@@ -99,7 +103,7 @@ function CylinderTower:drawLayer(func, scale, ...)
         local angle = (i - (#self.quads/2))
         -- TODO: Find out why the hell this works
         local weird_magic_offset = -30 + ((self.map.width-16)*20)
-        angle = angle - (((self.world.player.x-(weird_magic_offset))-(SCREEN_WIDTH/2)) / 20)
+        angle = angle - (((self:getFocusedX()-(weird_magic_offset))-(SCREEN_WIDTH/2)) / 20)
         angle = 1 + angle
         angle = (angle * angle_per_quad)
 
