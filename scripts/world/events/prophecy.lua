@@ -35,7 +35,10 @@ end
 function event:setText(text)
     if self.text then self.text:remove() end
     if not text then return end
-    self.text = Text(text, self.text_offset_x, -self.height, {auto_size = true})
+    self.text = Text(nil, self.text_offset_x, -self.height, {auto_size = true})
+    self.text.font = "legend"
+    self.text.font_size = 2
+    self.text:setText(text)
     self.text:setOrigin(0.5, 1)
 
     self.text:addFX(ProphecyScrollFX())
