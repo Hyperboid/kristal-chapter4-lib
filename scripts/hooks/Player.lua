@@ -23,10 +23,7 @@ function Player:init(chara, x, y)
 end
 
 function Player:beginClimb(last_state)
-    if self.sprite.sprite_options[2] ~= "climb/climb" then
-        self:setSprite("climb/climb")
-        self.sprite:setFrame(1)
-    end
+    self:setSprite("climb/climb")
     self.climb_speedboost = -1
     self.world.can_open_menu = false
 end
