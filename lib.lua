@@ -1,5 +1,11 @@
 local lib = {}
 
+function lib:init()
+    Utils.merge(MUSIC_VOLUMES, {
+        ch4_battle = 0.7
+    })
+end
+
 ---@param name PaletteIndex
 function lib:getPaletteColor(name)
     if Game.battle and Game.battle.encounter and Game.battle.encounter.reduced_tp then
