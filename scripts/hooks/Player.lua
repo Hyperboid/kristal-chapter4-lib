@@ -151,7 +151,7 @@ function Player:processJumpCharge()
             end
 
 
-            if (self.jumpchargetimer >= self.charge_times[#self.charge_times]) then
+            if (self.jumpchargetimer >= (self.charge_times[#self.charge_times] or math.huge)) then
                 self.sprite:setFrame(Utils.clamp(#self.charge_times+1, 1, #self.sprite.frames))
                 self.jumpchargeamount = (#self.charge_times+1);
                 self.jumpchargesfx:setPitch(0.5 + (#self.charge_times)/10)
@@ -454,7 +454,7 @@ function Player:drawClimbReticle()
         love.graphics.push()
         love.graphics.translate(xoff/2, yoff/2)
         love.graphics.rotate(-math.rad(angle))
-        local w = (self.jumpchargetimer / self.charge_times[#self.charge_times]) * (#self.charge_times+1)
+        local w = (self.jumpchargetimer / (self.charge_times[#self.charge_times] or 10)) * (#self.charge_times+1)
         for i = 0, #self.charge_times do
             local id, h = "ui/climb/hint_mid", 20
             if i == 0 then
