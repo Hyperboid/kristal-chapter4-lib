@@ -207,9 +207,8 @@ function Player:canClimb(dx, dy)
     local trigger
     for _, event in ipairs(self.world.stage:getObjects(Event)) do
         ---@cast event Event.climbarea|Event.climbentry
-        local x,y
-        x,y = -(self:getScaledWidth()/2), (self:getScaledHeight()/2) + 8
-        x,y = x + 2, y - 82
+        -- TODO: Find out where these numbers come from, because it sure isn't the actor
+        local x,y = -17, -37
         x,y = x + self.x,y + self.y
         x,y = x + (dx*40),y + (dy*40)
         if self.onrotatingtower then
