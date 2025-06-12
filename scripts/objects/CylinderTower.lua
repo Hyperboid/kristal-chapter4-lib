@@ -88,6 +88,12 @@ function CylinderTower:drawReticle()
         love.graphics.translate(self.world.width,0)
     end
     love.graphics.pop()
+
+    local w = (self.map.width*self.map.tile_width/(math.pi*2))
+    w = w - 10
+    local rect = (Rectangle(-w,0,w*2,self.map.world.height))
+    rect:setLayer(-100)
+    self:addChild(rect)
 end
 
 function CylinderTower:getFocusedX()
@@ -98,11 +104,14 @@ function CylinderTower:getFocusedX()
 end
 
 function CylinderTower:draw()
+    self:drawChildren(-math.huge, -0.1)
     Draw.setColor(COLORS.white)
     for _, range in ipairs(self.layer_ranges) do
-        local canvas = self:captureCanvas(range.func or self.drawChildren, range.min, range.max)
-        Draw.setColor({0.5,0.5,0.5})
-        self:drawLayer(canvas, (range.depth or 1) - (range.thickness or 0))
+        local canvas = self:captureCanvas(range.func or self.drawChildren, range.min or 0, range.max)
+        if range.thickness then
+            Draw.setColor({0.5,0.5,0.5})
+            self:drawLayer(canvas, (range.depth or 1) - (range.thickness or 0))
+        end
         Draw.setColor(COLORS.white)
         self:drawLayer(canvas, range.depth or 1)
     end
