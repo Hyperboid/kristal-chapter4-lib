@@ -2,7 +2,17 @@
 ---@field world World
 ---@field layers TileLayer[]
 ---@field quads love.Quad[]
+---@field layer_ranges CylinderTower.LayerRange[]
 local CylinderTower, super = Class(Object)
+
+
+---@class CylinderTower.LayerRange
+---@field min number?
+---@field max number?
+---@field depth number?
+---@field thickness number?
+---@field func fun(self:CylinderTower)?
+
 
 ---@param map Map
 ---@param depth number
@@ -32,6 +42,18 @@ function CylinderTower:init(map, depth)
         self:postLoad()
     end)
     self.parallax_x = 0
+    self.layer_ranges = {
+        {
+            min = 0,
+            max = 1,
+            thickness = 0.05,
+        },
+        {
+            thickness = 0,
+            func = self.drawReticle,
+            depth = 1,
+        }
+    }
 end
 
 function CylinderTower:postLoad()
@@ -43,6 +65,8 @@ end
 
 function CylinderTower:addLayer(layer, depth)
     local tilelayer = TileLayer(self.map, layer)
+    tilelayer.layer = depth - self.current_depth
+    self.current_depth = depth
     table.insert(self.layers, tilelayer)
     self:addChild(tilelayer)
 end
@@ -75,29 +99,40 @@ end
 
 function CylinderTower:draw()
     Draw.setColor(COLORS.white)
-    self:drawLayer(super.draw, 1)
-    Draw.setColor(COLORS.white)
-    self:drawLayer(self.drawReticle, 1)
+    for _, range in ipairs(self.layer_ranges) do
+        local canvas = self:captureCanvas(range.func or self.drawChildren, range.min, range.max)
+        Draw.setColor({0.5,0.5,0.5})
+        self:drawLayer(canvas, (range.depth or 1) - (range.thickness or 0))
+        Draw.setColor(COLORS.white)
+        self:drawLayer(canvas, range.depth or 1)
+    end
     -- Draw.drawWrapped(canvas, true, true, -self.world.player.x)
 end
 
----@param func function
+function CylinderTower:captureCanvas(func, ...)
+    local r,g,b,a = love.graphics.getColor()
+    local canvas = Draw.pushCanvas(self.map.width * self.map.tile_width, self.map.height * self.map.tile_height)
+    func(self, ...)
+    Draw.popCanvas(true)
+    love.graphics.setColor(r,g,b,a)
+    return canvas
+end
+
+---@param func function|love.Texture
 ---@param scale number? Unused
 ---@param ... any
 ---@overload fun(canvas:love.Texture, scale:number?)
 function CylinderTower:drawLayer(func, scale, ...)
+    local r,g,b,a = love.graphics.getColor()
     local canvas
     if type(func) == "function" then
-        local r,g,b,a = love.graphics.getColor()
-        canvas = Draw.pushCanvas(self.map.width * self.map.tile_width, self.map.height * self.map.tile_height)
-        func(self)
-        Draw.popCanvas()
-        love.graphics.setColor(r,g,b,a)
+        canvas = self:captureCanvas(func, ...)
     else
         canvas = func
     end
     love.graphics.push()
     love.graphics.scale(1 + (((self.map.width-22))/22), 1)
+    love.graphics.scale(scale,1)
     local angle_per_quad = math.rad(360 / #self.quads)
     for i = 1, #self.quads do
         local angle = (i - (#self.quads/2))
@@ -117,11 +152,12 @@ function CylinderTower:drawLayer(func, scale, ...)
             local sx = (x2 - x1) / select(3, quad:getViewport())
             local luma = 1.05-math.abs((cx/1.5))
             sx = sx
-            Draw.setColor({luma,luma,luma,1})
+            Draw.setColor({luma*r,luma*g,luma*b,a})
             Draw.draw(canvas, quad, x1, 0, 0, sx, 1)
         end
     end
     love.graphics.pop()
+    love.graphics.setColor(r,g,b,a)
 end
 
 return CylinderTower
