@@ -49,7 +49,16 @@ end
 
 function ProphecyScrollFX:drawPart(texture, min, max, alpha)
 
-    local _cx, _cy = self.parent.parent.parent:getScreenPos()
+    local parent = self.parent
+    for i = 1, 4 do
+        parent = parent.parent or parent
+        if parent:includes(World) then
+            ---@cast parent World
+            parent = parent.map.tile_layers[1] or parent.map.image_layers[1] or parent.map.events[1]
+        end
+    end
+
+    local _cx, _cy = parent:getScreenPos()
     _cx, _cy = -_cx, -_cy
 
     local surf_textured = Draw.pushCanvas(640, 480);
