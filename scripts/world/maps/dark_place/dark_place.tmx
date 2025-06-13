@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="40" tileheight="40" infinite="0" nextlayerid="9" nextobjectid="24">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="32" height="24" tilewidth="40" tileheight="40" infinite="0" nextlayerid="9" nextobjectid="25">
  <editorsettings>
   <export target="data.lua" format="lua"/>
  </editorsettings>
@@ -36,7 +36,9 @@
 </data>
  </layer>
  <objectgroup id="2" name="objects_bg"/>
- <objectgroup color="#ff00ff" id="3" name="objects_party"/>
+ <objectgroup color="#ff00ff" id="3" name="objects_party">
+  <object id="24" name="bell_button" x="120" y="440" width="40" height="40"/>
+ </objectgroup>
  <objectgroup id="4" name="objects_fg"/>
  <objectgroup color="#0000ff" id="5" name="collision" visible="0">
   <object id="2" x="0" y="0" width="40" height="440"/>

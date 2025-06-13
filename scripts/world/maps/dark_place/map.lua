@@ -19,10 +19,15 @@ function map:onFootstep(char, num)
     if not char.is_player then return end
     Assets.playSound("step"..num)
     ---@type RippleEffect
-    local effect = RippleEffect(char.x, char.y, {Game.party[1]:getColor()})
-    effect.physics.speed_x = (char.x - char.last_x)/DTMULT
-    effect.physics.speed_y = (char.y - char.last_y)/DTMULT
-    self.world:addChild(effect)
+    local effect = RippleEffect(char, {Game.party[1]:getColor()})
+    local x, y = char:getRelativePos(18/2, 72/2)
+    -- TODO: I couldn't find the right numbers
+    if Input.down("cancel") then
+        RippleEffect:MakeRipple(x,y, 60, nil, 192, 1, 15):applySpeedFrom(char, 0.75)
+    else
+        RippleEffect:MakeRipple(x,y, 30, nil, 192/2, 1, 8):applySpeedFrom(char, 0.75)
+        RippleEffect:MakeRipple(x,y, 30, nil, 192/3, 1, 8):applySpeedFrom(char, 0.75)
+    end
 end
 
 return map

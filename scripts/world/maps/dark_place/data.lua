@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 9,
-  nextobjectid = 24,
+  nextobjectid = 25,
   properties = {
     ["music"] = "darkchurch_intro"
   },
@@ -95,7 +95,21 @@ return {
       parallaxx = 1,
       parallaxy = 1,
       properties = {},
-      objects = {}
+      objects = {
+        {
+          id = 24,
+          name = "bell_button",
+          type = "",
+          shape = "rectangle",
+          x = 120,
+          y = 440,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
     },
     {
       type = "objectgroup",
