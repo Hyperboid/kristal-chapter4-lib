@@ -14,7 +14,6 @@ function RippleEffect:MakeRipple(arg0, arg1, arg2, arg3, arg4, arg5, arg6, arg7,
     arg10 = arg10 or 0.1
     arg3 = Utils.hexToRgb("#"..Utils.sub(string.format("%08X",arg3), 3,8))
     arg3[1], arg3[3] = arg3[3], arg3[1]
-    print(arg3)
 
     local obj = self(arg0, arg1, arg4, arg5, arg6, arg3, arg8, arg9, arg10, arg2, arg11)
     obj.layer = arg7 and -arg7 or obj.layer
