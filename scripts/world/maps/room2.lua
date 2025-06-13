@@ -9,8 +9,8 @@ return {
   height = 15,
   tilewidth = 40,
   tileheight = 40,
-  nextlayerid = 9,
-  nextobjectid = 17,
+  nextlayerid = 10,
+  nextobjectid = 24,
   properties = {
     ["name"] = "Test Map - Room 2",
     ["playerstate"] = "CLIMB"
@@ -86,6 +86,21 @@ return {
       objects = {}
     },
     {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 9,
+      name = "objects_inside",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 0,
+      parallaxy = 1,
+      properties = {},
+      objects = {}
+    },
+    {
       type = "tilelayer",
       x = 0,
       y = 0,
@@ -110,10 +125,10 @@ return {
         55, 54, 54, 54, 55, 41, 41, 54, 41, 54, 41, 54, 54, 41, 41, 54, 55, 42, 41, 54, 55, 55,
         42, 41, 41, 55, 55, 55, 42, 42, 55, 42, 55, 42, 54, 55, 55, 41, 55, 42, 42, 55, 42, 55,
         55, 54, 54, 54, 41, 54, 41, 54, 41, 55, 55, 41, 42, 42, 41, 42, 54, 42, 54, 54, 41, 41,
-        54, 42, 41, 54, 42, 42, 42, 41, 42, 54, 55, 54, 41, 54, 41, 55, 42, 42, 54, 42, 41, 42,
-        54, 41, 55, 42, 41, 41, 54, 55, 55, 55, 42, 41, 42, 54, 55, 42, 55, 55, 55, 41, 41, 54,
-        55, 42, 41, 55, 54, 54, 42, 42, 54, 55, 54, 42, 41, 54, 54, 55, 42, 54, 54, 55, 42, 42,
-        55, 55, 55, 41, 54, 54, 42, 55, 42, 54, 41, 42, 42, 55, 54, 42, 54, 41, 41, 41, 55, 41,
+        54, 42, 41, 43, 45, 42, 42, 41, 42, 54, 55, 54, 41, 54, 41, 55, 42, 42, 54, 42, 41, 42,
+        54, 41, 43, 0, 58, 41, 54, 55, 55, 55, 42, 41, 42, 54, 55, 42, 55, 55, 55, 41, 41, 54,
+        55, 42, 56, 0, 58, 54, 42, 42, 54, 55, 54, 42, 41, 54, 54, 55, 42, 54, 54, 55, 42, 42,
+        55, 55, 94, 70, 93, 54, 42, 55, 42, 54, 41, 42, 42, 55, 54, 42, 54, 41, 41, 41, 55, 41,
         42, 54, 55, 54, 41, 42, 41, 54, 54, 42, 41, 42, 41, 42, 55, 42, 54, 42, 41, 41, 42, 41,
         42, 42, 54, 55, 41, 54, 42, 42, 41, 41, 41, 55, 41, 55, 55, 41, 41, 41, 41, 41, 42, 42,
         55, 55, 54, 42, 55, 54, 42, 41, 42, 42, 54, 41, 41, 41, 42, 42, 41, 42, 55, 55, 42, 41,
@@ -249,8 +264,8 @@ return {
           shape = "rectangle",
           x = 0,
           y = -40,
-          width = 880,
-          height = 520,
+          width = 200,
+          height = 320,
           rotation = 0,
           visible = true,
           properties = {}
@@ -269,6 +284,84 @@ return {
           properties = {
             ["map"] = "tower2"
           }
+        },
+        {
+          id = 17,
+          name = "climbarea",
+          type = "",
+          shape = "rectangle",
+          x = 200,
+          y = -40,
+          width = 680,
+          height = 520,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 18,
+          name = "climbarea",
+          type = "",
+          shape = "rectangle",
+          x = 0,
+          y = 280,
+          width = 80,
+          height = 200,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 19,
+          name = "climbarea",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 400,
+          width = 40,
+          height = 80,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 20,
+          name = "climbarea",
+          type = "",
+          shape = "rectangle",
+          x = 160,
+          y = 400,
+          width = 40,
+          height = 80,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 21,
+          name = "climbarea",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 280,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 22,
+          name = "climbarea",
+          type = "",
+          shape = "rectangle",
+          x = 120,
+          y = 440,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     }
