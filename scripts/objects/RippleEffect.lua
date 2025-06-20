@@ -1,5 +1,5 @@
 ---@class RippleEffect: Object
----@overload fun(x, y, radmax, radstart, thickness, color, hsp, vsp, fric, life, curve): RippleEffect
+---@overload fun(x, y, life, radmax, thickness, color, hsp, vsp, radstart, fric, curve): RippleEffect
 local RippleEffect, super = Class(Object)
 
 ---@return self
