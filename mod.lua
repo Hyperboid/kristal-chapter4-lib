@@ -1,5 +1,8 @@
 function Mod:init()
     print("Loaded "..self.info.name.."!")
+    Utils.copyInto(MUSIC_VOLUMES, {
+        second_church = 0.8
+    })
 end
 
 --[==[
@@ -60,3 +63,33 @@ function Mod:preInit()
     print(JSON.encode(font_config))
 end
 --]==]
+
+--[[
+function Mod:postInit()
+    self.thingy = {0,0,0,0,0,0,0}
+    self.thingy2 = {0,0,0,0,0,0,0}
+    Game.stage.timer:every(2/30, function ()
+        table.insert(self.thingy, Ch4Lib.scr_wave(0, 1, 1/30, 0))
+        table.insert(self.thingy, Ch4Lib.scr_wave(1, 0, 1/30, 0))
+        if #self.thingy > (SCREEN_WIDTH/6) then
+            table.remove(self.thingy, 1)
+        end
+    end)
+end
+
+function Mod:postDraw()
+    local points = {}
+    for index, value in ipairs(self.thingy or {}) do
+        table.insert(points, index*6)
+        table.insert(points, (SCREEN_HEIGHT) - (value * (SCREEN_HEIGHT/2)))
+    end
+    love.graphics.line(points)
+    love.graphics.setColor(1,0,0,1)
+    points = {}
+    for index, value in ipairs(self.thingy2 or {}) do
+        table.insert(points, index*4)
+        table.insert(points, (SCREEN_HEIGHT) - (value * (SCREEN_HEIGHT/2)))
+    end
+    love.graphics.line(points)
+end
+]]

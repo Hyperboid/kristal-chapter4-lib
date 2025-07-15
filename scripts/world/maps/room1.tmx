@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="37" tilewidth="40" tileheight="40" infinite="0" nextlayerid="7" nextobjectid="63">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="37" tilewidth="40" tileheight="40" infinite="0" nextlayerid="9" nextobjectid="68">
  <editorsettings>
   <export target="room1.lua" format="lua"/>
  </editorsettings>
  <properties>
+  <property name="music" value="second_church"/>
   <property name="name" value="0th Sanctuary - Test Map"/>
  </properties>
  <tileset firstgid="1" source="../tilesets/castle.tsx"/>
  <tileset firstgid="41" source="../tilesets/libraryexcerpt.tsx"/>
+ <objectgroup id="8" name="objects tile oscilate">
+  <object id="65" name="tile_oscillate" x="120" y="320" width="240" height="160"/>
+  <object id="66" name="texturescroller" x="0" y="320">
+   <properties>
+    <property name="type" value="hsv"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="67" x="120" y="270" width="240" height="50">
+   <text fontfamily="Monospaced JVE" wrap="1" color="#ffffff">You'd put these below the &quot;broken&quot; tiles from bg_dw_church_2_tileset.</text>
+  </object>
+ </objectgroup>
  <layer id="1" name="tiles" width="39" height="37">
   <data encoding="csv">
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -124,7 +137,7 @@
   <object id="55" x="1360" y="640" width="40" height="240"/>
   <object id="56" x="1000" y="480" width="40" height="40"/>
  </objectgroup>
- <objectgroup color="#ff00ff" id="4" name="objects">
+ <objectgroup color="#ff00ff" id="4" name="objects_party">
   <object id="27" name="savepoint" x="80" y="730" width="40" height="40">
    <properties>
     <property name="text1">* Silence echoes in the darkness
@@ -194,6 +207,14 @@ you.</property>
    <point/>
   </object>
   <object id="30" name="entry" x="700" y="560">
+   <point/>
+  </object>
+ </objectgroup>
+ <objectgroup id="7" name="objects_overlay">
+  <object id="63" name="filter" x="-80" y="480">
+   <properties>
+    <property name="type" value="hsv"/>
+   </properties>
    <point/>
   </object>
  </objectgroup>

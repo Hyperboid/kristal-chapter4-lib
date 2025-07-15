@@ -9,9 +9,10 @@ return {
   height = 37,
   tilewidth = 40,
   tileheight = 40,
-  nextlayerid = 7,
-  nextobjectid = 63,
+  nextlayerid = 9,
+  nextobjectid = 68,
   properties = {
+    ["music"] = "second_church",
     ["name"] = "0th Sanctuary - Test Map"
   },
   tilesets = {
@@ -29,6 +30,67 @@ return {
     }
   },
   layers = {
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 8,
+      name = "objects tile oscilate",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 65,
+          name = "tile_oscillate",
+          type = "",
+          shape = "rectangle",
+          x = 120,
+          y = 320,
+          width = 240,
+          height = 160,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 66,
+          name = "texturescroller",
+          type = "",
+          shape = "point",
+          x = 0,
+          y = 320,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["type"] = "hsv"
+          }
+        },
+        {
+          id = 67,
+          name = "",
+          type = "",
+          shape = "text",
+          x = 120,
+          y = 270,
+          width = 240,
+          height = 50,
+          rotation = 0,
+          visible = true,
+          text = "You'd put these below the \"broken\" tiles from bg_dw_church_2_tileset.",
+          fontfamily = "Monospaced JVE",
+          wrap = true,
+          color = { 255, 255, 255 },
+          properties = {}
+        }
+      }
+    },
     {
       type = "tilelayer",
       x = 0,
@@ -579,7 +641,7 @@ return {
       type = "objectgroup",
       draworder = "topdown",
       id = 4,
-      name = "objects",
+      name = "objects_party",
       class = "",
       visible = true,
       opacity = 1,
@@ -862,6 +924,37 @@ return {
           rotation = 0,
           visible = true,
           properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
+      id = 7,
+      name = "objects_overlay",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 63,
+          name = "filter",
+          type = "",
+          shape = "point",
+          x = -80,
+          y = 480,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["type"] = "hsv"
+          }
         }
       }
     }
