@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="37" tilewidth="40" tileheight="40" infinite="0" nextlayerid="9" nextobjectid="68">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="37" tilewidth="40" tileheight="40" infinite="0" nextlayerid="9" nextobjectid="69">
  <editorsettings>
   <export target="room1.lua" format="lua"/>
  </editorsettings>
@@ -9,6 +9,7 @@
  </properties>
  <tileset firstgid="1" source="../tilesets/castle.tsx"/>
  <tileset firstgid="41" source="../tilesets/libraryexcerpt.tsx"/>
+ <tileset firstgid="89" source="../tilesets/bg_dw_church_2_tileset.tsx"/>
  <objectgroup id="8" name="objects tile oscilate">
   <object id="65" name="tile_oscillate" x="120" y="320" width="240" height="160"/>
   <object id="66" name="texturescroller" x="0" y="320">
@@ -72,10 +73,10 @@
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
-0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,121,132,133,96,96,98,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,112,121,133,105,105,106,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,131,132,112,133,114,107,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
+0,0,0,131,112,121,133,98,98,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,86,0,0,86,0,0,0,86,0,0,86,0,0,0,0,0,0,
 0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,
@@ -215,6 +216,9 @@ you.</property>
    <properties>
     <property name="type" value="hsv"/>
    </properties>
+   <point/>
+  </object>
+  <object id="68" name="churchfog" x="-40" y="560">
    <point/>
   </object>
  </objectgroup>
