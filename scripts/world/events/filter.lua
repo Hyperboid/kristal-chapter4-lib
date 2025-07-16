@@ -43,7 +43,9 @@ function event:fullDraw(...)
 end
 
 function event:draw()
-    if not (self.fx and self.fx:isActive()) then return end
+    if not (self.fx and self.fx:isActive()) then
+        return super.draw(self)
+    end
     love.graphics.push()
     Draw.pushCanvasLocks()
     love.graphics.origin()
