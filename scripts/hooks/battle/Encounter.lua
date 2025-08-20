@@ -11,8 +11,7 @@ function Encounter:hasReducedTension()
         -- Whine once
         self[old_prop_name] = nil
     end
-    return ((Kristal.getTime()*4) % 1) > 0.5
-    -- return super.hasReducedTension(self)
+    return super.hasReducedTension(self)
 end
 
 return Encounter
