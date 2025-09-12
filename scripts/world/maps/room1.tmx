@@ -212,11 +212,10 @@ you.</property>
   </object>
  </objectgroup>
  <objectgroup id="7" name="objects_overlay">
-  <object id="63" name="filter" x="-80" y="480">
+  <object id="63" name="filter" x="320" y="520" width="240" height="400">
    <properties>
     <property name="type" value="hsv"/>
    </properties>
-   <point/>
   </object>
   <object id="68" name="churchfog" x="-40" y="560">
    <point/>
