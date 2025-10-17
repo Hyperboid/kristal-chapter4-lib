@@ -29,8 +29,8 @@ function ProphecyPanel:init(sprite, text, width, height)
 	self.draw_sprite = true
 	self.draw_text = true
 	self.draw_back = true
-	self.no_back = false
-	self.fade_edges = false
+	self.no_back = true
+	self.fade_edges = true
 
     self.bg_surface = nil
     self.siner = 0
@@ -39,8 +39,8 @@ function ProphecyPanel:init(sprite, text, width, height)
     self.tilespr = Assets.getTexture("backgrounds/IMAGE_DEPTH_EXTEND_MONO_SEAMLESS")
     self.tiletex = Assets.getTexture("backgrounds/IMAGE_DEPTH_EXTEND_SEAMLESS")
     self.gradient20 = Assets.getTexture("backgrounds/gradient20")
-    self.propblue = Utils.hexToRgb("#42D0FF")
-    self.liteblue = Utils.hexToRgb("#FFFFFF")
+    self.propblue = ColorUtils.hexToRGB("#42D0FFFF")
+    self.liteblue = ColorUtils.hexToRGB("#FFFFFFFF")
 	
 	self.panel_alpha = 0
 end
@@ -61,7 +61,13 @@ end
 
 function ProphecyPanel:draw()
     --TODO: figure out the scrolling masked texture effect
-
+	local hsv = nil
+	for _,filter in ipairs(Game.world.map:getEvents("filter")) do
+		if filter and filter.hsv then
+			hsv = filter
+		end
+	end
+		
 	self.siner = self.siner + DTMULT
     local xsin = 0
     local ysin = math.cos(self.siner / 12) * 4
@@ -79,11 +85,11 @@ function ProphecyPanel:draw()
     love.graphics.setStencilTest()
 
     local back_canvas = Draw.pushCanvas(self.width, self.height)
-	local ogbg = Utils.hexToRgb("#A3F8FF")
-	ogbg = COLORS["black"]
-	local linecol = Utils.mergeColor(Utils.hexToRgb("#8BE9EF"), Utils.hexToRgb("#17EDFF"), 0.5 + (math.sin(self.siner / 120) * 0.5))
+	local ogbg = ColorUtils.hexToRGB("#A3F8FFFF")
+	ogbg = {COLORS["black"]}
+	local linecol = ColorUtils.mergeColor(ColorUtils.hexToRGB("#8BE9EFFF"), ColorUtils.hexToRGB("#17EDFFFF"), 0.5 + (math.sin(self.siner / 120) * 0.5))
 	local gradalpha = 1
-	Draw.setColor(ogbg, gradalpha*0.5)
+	Draw.setColor(ogbg, gradalpha*0.45)
 	Draw.rectangle("fill", 0, 0, 320, 240)
     love.graphics.setBlendMode("add")
 	draw_sprite_tiled_ext(self.tiletex, 0, math.ceil(-self.siner / 2), math.ceil(-self.siner / 2), 1, 1, linecol, 1)
@@ -97,15 +103,25 @@ function ProphecyPanel:draw()
 		Draw.draw(self.gradient20, self.width, 0, math.rad(90), self.height/20, -3, 0, 20)
 	end
 	if self.fade_edges then
-		Draw.setColor(gradcol, 0)
+		local fade_edges_canvas = Draw.pushCanvas(self.width, self.height)
+		Draw.setColor(1,1,1,1)
 		Draw.draw(self.gradient20, 0, 0, 0, self.width/20, -3, 0, 20)
 		Draw.draw(self.gradient20, 0, self.height, 0, self.width/20, 3, 0, 20)
 		Draw.draw(self.gradient20, 0, 0, math.rad(90), self.height/20, 3, 0, 20)
 		Draw.draw(self.gradient20, self.width, 0, math.rad(90), self.height/20, -3, 0, 20)
+		Draw.popCanvas()
+        local last_shader = love.graphics.getShader()
+		love.graphics.setShader(Ch4Lib.invert_alpha)
+		love.graphics.setBlendMode("multiply", "premultiplied")
+		Draw.draw(fade_edges_canvas, 0, 0, 0)
+		love.graphics.setShader(last_shader)
 	end
-	love.graphics.setBlendMode("alpha")
-    love.graphics.setBlendMode("add")
+	love.graphics.setBlendMode("alpha", "alphamultiply")
 	Draw.setColor(self.panel_alpha,self.panel_alpha,self.panel_alpha)
+	if self.fade_edges then
+		Draw.draw(sprite_canvas, self.sprite_offset_x, self.sprite_offset_y, 0, 1, 1)
+	end
+    love.graphics.setBlendMode("add")
 	Draw.draw(sprite_canvas, self.sprite_offset_x, self.sprite_offset_y, 0, 1, 1)
 	Draw.draw(sprite_canvas, self.sprite_offset_x, self.sprite_offset_y, 0, 1, 1)
 	Draw.draw(sprite_canvas, self.sprite_offset_x, self.sprite_offset_y, 0, 1, 1)
@@ -117,12 +133,30 @@ function ProphecyPanel:draw()
 	end]]
 	Draw.popCanvas()
 	Draw.popCanvas()
+	local hsv_shader = Assets.getShader("hsv_transform")
+	local last_shader = love.graphics.getShader()
+	if hsv and hsv.fx then
+		love.graphics.setShader(hsv_shader)
+		hsv_shader:send("_hsv", {360-hsv.fx.hue, 1, 1})
+	end
 	for i = 1, 2 do	
-		Draw.setColor(1,1,1,self.panel_alpha * 0.5) -- The alpha isn't accurate to DR's code but fuck it
+		Draw.setColor(1,1,1,self.panel_alpha * 0.45) -- The alpha isn't accurate to DR's code but fuck it
 		Draw.draw(back_canvas, (self.sprite.x - self.x) + ysin * (2 * i), (self.sprite.y - self.y) + ysin * (2 * i), 0, 2, 2)
 	end
-	Draw.setColor(1,1,1,self.panel_alpha)
+	Draw.setColor(1,1,1,self.panel_alpha*0.7)
 	Draw.draw(back_canvas, (self.sprite.x - self.x) + xsin, (self.sprite.y - self.y) + ysin, 0, 2, 2)
+	love.graphics.setShader(last_shader)
+	if hsv and hsv.fx then
+		love.graphics.stencil(function()
+			local last_shader = love.graphics.getShader()
+			love.graphics.setShader(Kristal.Shaders["Mask"])
+			Draw.drawCanvas(self.sprite.canvas, (self.sprite.x - self.x) + xsin + self.sprite_offset_x*2, (self.sprite.y - self.y) + ysin + self.sprite_offset_y*2, 0, 2, 2)
+			love.graphics.setShader(last_shader)
+		end, "replace", 1)
+		love.graphics.setStencilTest("greater", 0)
+		Draw.draw(back_canvas, (self.sprite.x - self.x) + xsin, (self.sprite.y - self.y) + ysin, 0, 2, 2)
+		love.graphics.setStencilTest()
+	end
     local text_canvas = Draw.pushCanvas(320, 240)
     love.graphics.stencil(function()
         local last_shader = love.graphics.getShader()
@@ -138,7 +172,7 @@ function ProphecyPanel:draw()
     love.graphics.setStencilTest()
 	Draw.popCanvas()
     love.graphics.setBlendMode("add")
-	Draw.setColor(self.panel_alpha,self.panel_alpha,self.panel_alpha)
+	Draw.setColor(self.panel_alpha*0.7,self.panel_alpha*0.7,self.panel_alpha*0.7)
 	Draw.draw(text_canvas, (self.text.x - self.x) + xsin + self.text_offset_x, (self.text.y - self.y) + ysin + self.text_offset_y, 0, 2, 2)
 	Draw.draw(text_canvas, (self.text.x - self.x) + xsin + self.text_offset_x, (self.text.y - self.y) + ysin + self.text_offset_y, 0, 2, 2)
     love.graphics.setBlendMode("alpha")

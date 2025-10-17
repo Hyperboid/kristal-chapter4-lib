@@ -32,11 +32,17 @@ function Prophecy:init(data)
     self.break_type            = properties["break_type"]                     -- if enabled, sets the delay time for when the panel should break apart to a specific interval
     self.break_delay           = properties["break_delay"]                    -- if "break_type" is not defined, sets the delay time for when the panel should break apart
 
+	self.no_back               = properties["no_back"] or false
+
+	self.fade_edges            = properties["no_back"] or false
+
     self.panel                 = ProphecyPanel(self.texture, self.text, self.panel_width, self.panel_height)
     self.panel.sprite_offset_x = self.sprite_offset_x
     self.panel.sprite_offset_y = self.sprite_offset_y
     self.panel.text_offset_x   = self.text_offset_x
     self.panel.text_offset_y   = self.text_offset_y
+	self.panel.no_back		   = self.no_back
+	self.panel.fade_edges	   = self.fade_edges
 
     self.container:addChild(self.panel)
 
@@ -67,13 +73,17 @@ function Prophecy:update()
 
     Object.startCache()
     if self:collidesWith(self.world.player) then
-        --self.afx.alpha = Utils.approach(self.afx.alpha, 1, DT*4)
-		self.panel_active = true
-		self.panel.panel_alpha = Utils.lerp(self.panel.panel_alpha, 1.2, DTMULT*0.1)
+        --self.afx.alpha = MathUtils.approach(self.afx.alpha, 1, DT*4)
+        self.panel_active = true
+        self.panel.panel_alpha = MathUtils.lerp(self.panel.panel_alpha, 1.2, DTMULT*0.1)
+        -- Needed by nth Sanctuary for Deltarune accuracy.
+        -- TODO: Incorporate into the library once church darkness is more fleshed out
+        Kristal.callEvent("updateLightBeams", (1 - (self.panel.panel_alpha / 1.2)))
     else
-        --self.afx.alpha = Utils.approach(self.afx.alpha, 0, DT*2)
-		self.panel.panel_alpha = Utils.lerp(self.panel.panel_alpha, 0, DTMULT*0.2)
+        --self.afx.alpha = MathUtils.approach(self.afx.alpha, 0, DT*2)
+        self.panel.panel_alpha = MathUtils.lerp(self.panel.panel_alpha, 0, DTMULT*0.2)
 		self.panel_active = false
+        Kristal.callEvent("updateLightBeams", (1 - (self.panel.panel_alpha / 1.2)))
     end
     Object.endCache()
 end
