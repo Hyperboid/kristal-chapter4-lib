@@ -16,6 +16,19 @@ function event:init(data)
     self.timber = 0
     self.canceltimer = 0
     self.tickcount = 0
+    self.timeout_script = properties["timeout_script"]
+    self.script = properties["script"]
+    -- TODO: Actually implement this
+    self.exit_script = properties["exit_script"]
+    if self.timeout_script then
+        assert(Registry.getEventScript(self.timeout_script), "No such event script \""..self.timeout_script.."\"")
+    end
+    if self.script then
+        assert(Registry.getEventScript(self.script), "No such event script \""..self.script.."\"")
+    end
+    if self.exit_script then
+        assert(Registry.getEventScript(self.exit_script), "No such event script \""..self.exit_script.."\"")
+    end
 end
 
 function event:update()
@@ -40,6 +53,9 @@ function event:update()
             self.timber = self.time
         end
         self.con = 2
+        if self.script then
+            Registry.getEventScript(self.script)(self)
+        end
     end
     self.sprite:setFrame(1)
     if self.con == 2 then
@@ -51,7 +67,7 @@ function event:update()
             end
             Object.endCache()
             local tickrate = 10
-            
+
             if self.timber < 320 then
                 tickrate = 8
             end
@@ -76,9 +92,13 @@ function event:update()
                 Assets.playSound("ui_move", 0.7, pitch)
             end
             if self.timber <= 0 then
-                self.complexsnd:add(1, "ghostappear", 0.8, 0.7, 0, -1, 0)
-                self.complexsnd:add(2, "ghostappear", 1.3, 0.7, 0, -1, 0)
-                self.complexsnd:play()
+                if self.timeout_script then
+                    Registry.getEventScript(self.timeout_script)(self)
+                else
+                    self.complexsnd:add(1, "ghostappear", 0.8, 0.7, 0, -1, 0)
+                    self.complexsnd:add(2, "ghostappear", 1.3, 0.7, 0, -1, 0)
+                    self.complexsnd:play()
+                end
                 self.con = 0
             end
         else
