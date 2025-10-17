@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="59" tilewidth="40" tileheight="40" infinite="0" nextlayerid="10" nextobjectid="91">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="59" tilewidth="40" tileheight="40" infinite="0" nextlayerid="10" nextobjectid="93">
  <editorsettings>
   <export target="room1.lua" format="lua"/>
  </editorsettings>
@@ -206,6 +206,14 @@
    </properties>
   </object>
   <object id="90" name="climbcoin" x="480" y="1040" width="40" height="40"/>
+  <object id="92" name="climbswitch" x="520" y="1240" width="40" height="40">
+   <properties>
+    <property name="exit_script" value="test"/>
+    <property name="script" value="test"/>
+    <property name="timed" type="bool" value="true"/>
+    <property name="timeout_script" value="test"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#ff00ff" id="4" name="objects_party">
   <object id="27" name="savepoint" x="80" y="1610" width="40" height="40">
@@ -231,7 +239,7 @@ you.</property>
   <object id="41" name="prophecy" x="160" y="1600" width="280" height="120">
    <properties>
     <property name="text" value="THE FALSE PLUEPHETS WILL DECIEVE THE MASSES."/>
-    <property name="texture" value="prophecies/falsepluephets"/>
+    <property name="texture" value="pluephets"/>
    </properties>
   </object>
   <object id="42" name="prophecy" x="960" y="1160" width="280" height="120">

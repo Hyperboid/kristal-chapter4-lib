@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 10,
-  nextobjectid = 91,
+  nextobjectid = 93,
   properties = {
     ["music"] = "second_church",
     ["name"] = "0th Sanctuary - Test Map"
@@ -774,6 +774,24 @@ return {
           rotation = 0,
           visible = true,
           properties = {}
+        },
+        {
+          id = 92,
+          name = "climbswitch",
+          type = "",
+          shape = "rectangle",
+          x = 520,
+          y = 1240,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["exit_script"] = "test",
+            ["script"] = "test",
+            ["timed"] = true,
+            ["timeout_script"] = "test"
+          }
         }
       }
     },
@@ -900,7 +918,7 @@ return {
           visible = true,
           properties = {
             ["text"] = "THE FALSE PLUEPHETS WILL DECIEVE THE MASSES.",
-            ["texture"] = "prophecies/falsepluephets"
+            ["texture"] = "pluephets"
           }
         },
         {
