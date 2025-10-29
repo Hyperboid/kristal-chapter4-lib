@@ -9,8 +9,8 @@ return {
   height = 59,
   tilewidth = 40,
   tileheight = 40,
-  nextlayerid = 10,
-  nextobjectid = 93,
+  nextlayerid = 11,
+  nextobjectid = 97,
   properties = {
     ["music"] = "second_church",
     ["name"] = "0th Sanctuary - Test Map"
@@ -798,6 +798,74 @@ return {
     {
       type = "objectgroup",
       draworder = "topdown",
+      id = 10,
+      name = "climbareas",
+      class = "",
+      visible = true,
+      opacity = 1,
+      offsetx = 0,
+      offsety = 0,
+      parallaxx = 1,
+      parallaxy = 1,
+      properties = {},
+      objects = {
+        {
+          id = 93,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 360,
+          y = 720,
+          width = 40,
+          height = 640,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 94,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 400,
+          y = 1240,
+          width = 160,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 95,
+          name = "",
+          type = "",
+          shape = "rectangle",
+          x = 400,
+          y = 760,
+          width = 280,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 96,
+          name = "climbarea",
+          type = "",
+          shape = "rectangle",
+          x = 320,
+          y = 1360,
+          width = 80,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        }
+      }
+    },
+    {
+      type = "objectgroup",
+      draworder = "topdown",
       id = 4,
       name = "objects_party",
       class = "",
@@ -1172,58 +1240,6 @@ return {
           properties = {
             ["area"] = { id = 77 }
           }
-        },
-        {
-          id = 82,
-          name = "climbarea",
-          type = "",
-          shape = "rectangle",
-          x = 320,
-          y = 1360,
-          width = 80,
-          height = 40,
-          rotation = 0,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 83,
-          name = "climbarea",
-          type = "",
-          shape = "rectangle",
-          x = 360,
-          y = 720,
-          width = 40,
-          height = 640,
-          rotation = 0,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 84,
-          name = "climbarea",
-          type = "",
-          shape = "rectangle",
-          x = 400,
-          y = 1240,
-          width = 160,
-          height = 40,
-          rotation = 0,
-          visible = true,
-          properties = {}
-        },
-        {
-          id = 85,
-          name = "climbarea",
-          type = "",
-          shape = "rectangle",
-          x = 400,
-          y = 760,
-          width = 280,
-          height = 40,
-          rotation = 0,
-          visible = true,
-          properties = {}
         },
         {
           id = 88,
