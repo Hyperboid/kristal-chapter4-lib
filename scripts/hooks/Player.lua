@@ -85,7 +85,7 @@ function Player:processClimbInputs()
 	if buffer_length >= 5 then
 		buffer_length = 4
 	end
-	buffer_length = 1
+	buffer_length = DTMULT
 	if (Input.down("up") or self.upbuffer > 0) or self.forceclimb then
 		if Input.down("up") and self.facing ~= "up" then
 			self.upbuffer = buffer_length
@@ -199,11 +199,11 @@ function Player:processClimbInputs()
 				end
 			end
 			self.fallingspeed = self.fallingspeed + 0.5 * DTMULT
-			if self.fallingspeed >= self.fall_speed_cap then
-				self.fallingspeed = self.fall_speed_cap
+			if self.fallingspeed >= self.fall_speed_cap * DTMULT then
+				self.fallingspeed = self.fall_speed_cap * DTMULT
 			end
-			if self.fallingspeed >= 20 then
-				self.naturalybias = math.min(self.naturalybias + 2 * DTMULT, 80)
+			if self.fallingspeed >= 20 * DTMULT then
+				self.naturalybias = math.min(self.naturalybias + 2 * DTMULT, 80 * DTMULT)
 			end
 			if self.falldir == "down" then
 				self.y = self.y + math.ceil(self.fallingspeed)
@@ -593,10 +593,6 @@ function Player:doClimbJump(direction, distance)
 				local prevy = self.y
 				self:slideTo(self.x + (dx*40*dist), self.y + (dy*40*dist), duration, "out-sine")
 				self.climbtimer = 0
-				Game.world.timer:during(duration, function()
-					self.climbtimer = self.climbtimer + DT
-					self.drawoffsety = -math.sin((self.climbtimer / duration) * math.pi) * (2 * (self.jumpchargeamount - 1))
-				end)
 				Game.world.timer:during(duration, function()
 					self.climbtimer = self.climbtimer + DT
 					self.drawoffsety = -math.sin((self.climbtimer / duration) * math.pi) * (2 * (self.jumpchargeamount - 1)) 
