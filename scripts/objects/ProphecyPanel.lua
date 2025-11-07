@@ -41,6 +41,7 @@ function ProphecyPanel:init(sprite, text, width, height)
     self.gradient20 = Assets.getTexture("backgrounds/gradient20")
     self.propblue = ColorUtils.hexToRGB("#42D0FFFF")
     self.liteblue = ColorUtils.hexToRGB("#FFFFFFFF")
+    self.mysterycolor1 = ColorUtils.hexToRGB("#8BE9EFFF")
 	
 	self.panel_alpha = 0
 end
@@ -87,7 +88,7 @@ function ProphecyPanel:draw()
     local back_canvas = Draw.pushCanvas(self.width, self.height)
 	local ogbg = ColorUtils.hexToRGB("#A3F8FFFF")
 	ogbg = {COLORS["black"]}
-	local linecol = ColorUtils.mergeColor(ColorUtils.hexToRGB("#8BE9EFFF"), ColorUtils.hexToRGB("#17EDFFFF"), 0.5 + (math.sin(self.siner / 120) * 0.5))
+	local linecol = ColorUtils.mergeColor(self.mysterycolor1, ColorUtils.hexToRGB("#17EDFFFF"), 0.5 + (math.sin(self.siner / 120) * 0.5))
 	local gradalpha = 1
 	Draw.setColor(ogbg, gradalpha*0.45)
 	Draw.rectangle("fill", 0, 0, 320, 240)
