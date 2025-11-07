@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="59" tilewidth="40" tileheight="40" infinite="0" nextlayerid="11" nextobjectid="97">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="59" tilewidth="40" tileheight="40" infinite="0" nextlayerid="11" nextobjectid="103">
  <editorsettings>
   <export target="room1.lua" format="lua"/>
  </editorsettings>
@@ -214,6 +214,11 @@
     <property name="timeout_script" value="test"/>
    </properties>
   </object>
+  <object id="102" name="roomglow" x="642.667" y="1053.33" width="120" height="120">
+   <properties>
+    <property name="prophecy" type="bool" value="true"/>
+   </properties>
+  </object>
  </objectgroup>
  <objectgroup color="#ffaa00" id="10" name="climbareas">
   <object id="93" x="360" y="720" width="40" height="640"/>
@@ -244,13 +249,21 @@ you.</property>
   <object id="40" name="climbarea" x="400" y="2000" width="160" height="40"/>
   <object id="41" name="prophecy" x="160" y="1600" width="280" height="120">
    <properties>
-    <property name="text" value="THE FALSE PLUEPHETS WILL DECIEVE THE MASSES."/>
+    <property name="no_back" type="bool" value="true"/>
+    <property name="offy" type="int" value="-150"/>
+    <property name="spr_offx" type="int" value="20"/>
+    <property name="text">THE FALSE PLUEPHETS
+WILL DECIEVE THE MASSES.</property>
     <property name="texture" value="pluephets"/>
+    <property name="txt_offy" type="int" value="20"/>
    </properties>
   </object>
   <object id="42" name="prophecy" x="960" y="1160" width="280" height="120">
    <properties>
-    <property name="text" value="AND THE TOBY'S CORE WILL FALL INTO CHAOS."/>
+    <property name="no_back" type="bool" value="true"/>
+    <property name="offy" type="int" value="-200"/>
+    <property name="text">THE TOBY'S CORE
+WILL FALL INTO CHAOS.</property>
    </properties>
   </object>
   <object id="50" name="climbarea" x="400" y="1880" width="160" height="40"/>
@@ -312,15 +325,28 @@ you.</property>
   <object id="30" name="entry" x="700" y="1440">
    <point/>
   </object>
+  <object id="98" name="prophecy1" x="1100" y="1100">
+   <point/>
+  </object>
  </objectgroup>
  <objectgroup id="7" name="objects_overlay">
-  <object id="63" name="filter" x="320" y="1400" width="240" height="400">
+  <object id="63" name="filter" x="-12" y="1476" width="240" height="400">
    <properties>
+    <property name="flagcheck" value="second_sanctuary"/>
     <property name="type" value="hsv"/>
    </properties>
+   <point/>
   </object>
   <object id="68" name="churchfog" x="-40" y="1440">
+   <properties>
+    <property name="flagcheck" value="second_sanctuary"/>
+   </properties>
    <point/>
+  </object>
+  <object id="97" name="cameratarget" x="960" y="1160" width="280" height="120">
+   <properties>
+    <property name="marker" value="prophecy1"/>
+   </properties>
   </object>
  </objectgroup>
 </map>

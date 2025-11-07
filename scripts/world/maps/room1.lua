@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 11,
-  nextobjectid = 97,
+  nextobjectid = 103,
   properties = {
     ["music"] = "second_church",
     ["name"] = "0th Sanctuary - Test Map"
@@ -792,6 +792,21 @@ return {
             ["timed"] = true,
             ["timeout_script"] = "test"
           }
+        },
+        {
+          id = 102,
+          name = "roomglow",
+          type = "",
+          shape = "rectangle",
+          x = 642.667,
+          y = 1053.33,
+          width = 120,
+          height = 120,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["prophecy"] = true
+          }
         }
       }
     },
@@ -985,8 +1000,12 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["text"] = "THE FALSE PLUEPHETS WILL DECIEVE THE MASSES.",
-            ["texture"] = "pluephets"
+            ["no_back"] = true,
+            ["offy"] = -150,
+            ["spr_offx"] = 20,
+            ["text"] = "THE FALSE PLUEPHETS\nWILL DECIEVE THE MASSES.",
+            ["texture"] = "pluephets",
+            ["txt_offy"] = 20
           }
         },
         {
@@ -1001,7 +1020,9 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["text"] = "AND THE TOBY'S CORE WILL FALL INTO CHAOS."
+            ["no_back"] = true,
+            ["offy"] = -200,
+            ["text"] = "THE TOBY'S CORE\nWILL FALL INTO CHAOS."
           }
         },
         {
@@ -1297,6 +1318,19 @@ return {
           rotation = 0,
           visible = true,
           properties = {}
+        },
+        {
+          id = 98,
+          name = "prophecy1",
+          type = "",
+          shape = "point",
+          x = 1100,
+          y = 1100,
+          width = 0,
+          height = 0,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     },
@@ -1318,14 +1352,15 @@ return {
           id = 63,
           name = "filter",
           type = "",
-          shape = "rectangle",
-          x = 320,
-          y = 1400,
+          shape = "point",
+          x = -12,
+          y = 1476,
           width = 240,
           height = 400,
           rotation = 0,
           visible = true,
           properties = {
+            ["flagcheck"] = "second_sanctuary",
             ["type"] = "hsv"
           }
         },
@@ -1340,7 +1375,24 @@ return {
           height = 0,
           rotation = 0,
           visible = true,
-          properties = {}
+          properties = {
+            ["flagcheck"] = "second_sanctuary"
+          }
+        },
+        {
+          id = 97,
+          name = "cameratarget",
+          type = "",
+          shape = "rectangle",
+          x = 960,
+          y = 1160,
+          width = 280,
+          height = 120,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["marker"] = "prophecy1"
+          }
         }
       }
     }
