@@ -214,7 +214,7 @@
     <property name="timeout_script" value="test"/>
    </properties>
   </object>
-  <object id="102" name="roomglow" x="642.667" y="1053.33" width="120" height="120">
+  <object id="102" name="roomglow" x="640" y="1040" width="120" height="120">
    <properties>
     <property name="prophecy" type="bool" value="true"/>
    </properties>
