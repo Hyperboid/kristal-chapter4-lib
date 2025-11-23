@@ -1,3 +1,4 @@
+---@class ProphecyPanel : Object
 local ProphecyPanel, super = Class(Object)
 
 function ProphecyPanel:init(sprite, text, width, height)
@@ -42,8 +43,12 @@ function ProphecyPanel:init(sprite, text, width, height)
     self.propblue = ColorUtils.hexToRGB("#42D0FFFF")
     self.liteblue = ColorUtils.hexToRGB("#FFFFFFFF")
     self.mysterycolor1 = ColorUtils.hexToRGB("#8BE9EFFF")
-	
-	self.panel_alpha = 0
+    self.mysterycolor2 = ColorUtils.hexToRGB("#17EDFFFF")
+    self.text_color = {0, 1, 1, 1}
+
+    self.panel_alpha = 0
+
+    
 end
 
 local function draw_sprite_tiled_ext(tex, _, x, y, sx, sy, color, alpha)
@@ -88,7 +93,7 @@ function ProphecyPanel:draw()
     local back_canvas = Draw.pushCanvas(self.width, self.height)
 	local ogbg = ColorUtils.hexToRGB("#A3F8FFFF")
 	ogbg = {COLORS["black"]}
-	local linecol = ColorUtils.mergeColor(self.mysterycolor1, ColorUtils.hexToRGB("#17EDFFFF"), 0.5 + (math.sin(self.siner / 120) * 0.5))
+	local linecol = ColorUtils.mergeColor(self.mysterycolor1, self.mysterycolor2, 0.5 + (math.sin(self.siner / 120) * 0.5))
 	local gradalpha = 1
 	Draw.setColor(ogbg, gradalpha*0.45)
 	Draw.rectangle("fill", 0, 0, 320, 240)
@@ -166,7 +171,7 @@ function ProphecyPanel:draw()
         love.graphics.setShader(last_shader)
     end, "replace", 1)
 	love.graphics.setStencilTest("greater", 0)
-	Draw.setColor(0, 1, 1, 1)
+	Draw.setColor(self.text_color)
 	Draw.rectangle("fill", 0, 0, 320, 240)
 	draw_sprite_tiled_ext(self.tiletex, 0, math.ceil(self.siner / 2), math.ceil(self.siner / 2), 1, 1, COLORS["white"], 0.6)
 	Draw.setColor(1, 1, 1, 1)
