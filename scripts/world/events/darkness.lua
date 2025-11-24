@@ -82,6 +82,11 @@ function Darkness:draw()
 				if object:getFX("climb_fade") then -- dumb fix
 					alpha = alpha * object:getFX("climb_fade").alpha
 				end
+				for _,roomglow in ipairs(Game.world.map:getEvents("roomglow")) do
+					if roomglow then
+						alpha = alpha * 1-roomglow.actind
+					end
+				end
 				Kristal.Shaders["AddColor"]:sendColor("inputcolor", col)
 				Kristal.Shaders["AddColor"]:send("amount", alpha)
 
