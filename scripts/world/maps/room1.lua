@@ -1,7 +1,7 @@
 return {
-  version = "1.10",
+  version = "1.11",
   luaversion = "5.1",
-  tiledversion = "1.10.2",
+  tiledversion = "1.11.2",
   class = "",
   orientation = "orthogonal",
   renderorder = "right-down",
@@ -10,7 +10,7 @@ return {
   tilewidth = 40,
   tileheight = 40,
   nextlayerid = 11,
-  nextobjectid = 80,
+  nextobjectid = 88,
   properties = {
     ["music"] = "second_church",
     ["name"] = "0th Sanctuary - Test Map"
@@ -36,8 +36,7 @@ return {
     {
       name = "light_areas",
       firstgid = 287,
-      filename = "../tilesets/light_areas.tsx",
-      exportfilename = "../tilesets/light_areas.lua"
+      filename = "../tilesets/light_areas.tsx"
     }
   },
   layers = {
@@ -839,8 +838,10 @@ return {
           rotation = 0,
           visible = true,
           properties = {
+            ["fade_edges"] = true,
+            ["no_back"] = true,
             ["text"] = "THE FALSE PLUEPHETS\nWILL DECIEVE THE MASSES.",
-            ["texture"] = "prophecies/falsepluephets"
+            ["texture"] = "pluephets"
           }
         },
         {
@@ -855,14 +856,11 @@ return {
           rotation = 0,
           visible = true,
           properties = {
-            ["offy"] = -200,
+            ["fade_edges"] = true,
+            ["no_back"] = true,
             ["panel_w"] = 140,
-            ["spr_offx"] = 57,
-            ["spr_offy"] = 0,
             ["text"] = "sans deltarune will go\nto undertale",
-            ["texture"] = "uz",
-            ["txt_offx"] = 0,
-            ["txt_offy"] = 20
+            ["texture"] = "uz"
           }
         },
         {
@@ -982,6 +980,112 @@ return {
           properties = {
             ["prophecy"] = true
           }
+        },
+        {
+          id = 80,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 160,
+          y = 1280,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 81,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 120,
+          y = 1280,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 82,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 1280,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {
+            ["sprite"] = "party/susie/dark/t_pose"
+          }
+        },
+        {
+          id = 83,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 1240,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 84,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 1200,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 85,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 80,
+          y = 1160,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 86,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 120,
+          y = 1160,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
+        },
+        {
+          id = 87,
+          name = "destructableclimbarea",
+          type = "",
+          shape = "rectangle",
+          x = 160,
+          y = 1160,
+          width = 40,
+          height = 40,
+          rotation = 0,
+          visible = true,
+          properties = {}
         }
       }
     },

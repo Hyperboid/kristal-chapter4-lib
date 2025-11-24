@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.10.2" orientation="orthogonal" renderorder="right-down" width="39" height="41" tilewidth="40" tileheight="40" infinite="0" nextlayerid="11" nextobjectid="80">
+<map version="1.11" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="39" height="41" tilewidth="40" tileheight="40" infinite="0" nextlayerid="11" nextobjectid="88">
  <editorsettings>
   <export target="room1.lua" format="lua"/>
  </editorsettings>
@@ -215,22 +215,21 @@ you.</property>
   <object id="40" name="climbarea" x="400" y="1280" width="160" height="40"/>
   <object id="41" name="prophecy" x="160" y="880" width="280" height="120">
    <properties>
+    <property name="fade_edges" type="bool" value="true"/>
+    <property name="no_back" type="bool" value="true"/>
     <property name="text">THE FALSE PLUEPHETS
 WILL DECIEVE THE MASSES.</property>
-    <property name="texture" value="prophecies/falsepluephets"/>
+    <property name="texture" value="pluephets"/>
    </properties>
   </object>
   <object id="42" name="prophecy" x="960" y="400" width="280" height="120">
    <properties>
-    <property name="offy" type="float" value="-200"/>
+    <property name="fade_edges" type="bool" value="true"/>
+    <property name="no_back" type="bool" value="true"/>
     <property name="panel_w" type="float" value="140"/>
-    <property name="spr_offx" type="float" value="57"/>
-    <property name="spr_offy" type="float" value="0"/>
     <property name="text">sans deltarune will go
 to undertale</property>
     <property name="texture" value="uz"/>
-    <property name="txt_offx" type="float" value="0"/>
-    <property name="txt_offy" type="float" value="20"/>
    </properties>
   </object>
   <object id="50" name="climbarea" x="400" y="1160" width="160" height="40"/>
@@ -268,6 +267,18 @@ to undertale</property>
    </properties>
    <point/>
   </object>
+  <object id="80" name="destructableclimbarea" x="160" y="1280" width="40" height="40"/>
+  <object id="81" name="destructableclimbarea" x="120" y="1280" width="40" height="40"/>
+  <object id="82" name="destructableclimbarea" x="80" y="1280" width="40" height="40">
+   <properties>
+    <property name="sprite" value="party/susie/dark/t_pose"/>
+   </properties>
+  </object>
+  <object id="83" name="destructableclimbarea" x="80" y="1240" width="40" height="40"/>
+  <object id="84" name="destructableclimbarea" x="80" y="1200" width="40" height="40"/>
+  <object id="85" name="destructableclimbarea" x="80" y="1160" width="40" height="40"/>
+  <object id="86" name="destructableclimbarea" x="120" y="1160" width="40" height="40"/>
+  <object id="87" name="destructableclimbarea" x="160" y="1160" width="40" height="40"/>
  </objectgroup>
  <objectgroup id="10" name="objects_lightareas">
   <object id="74" gid="295" x="860" y="1160" width="160" height="720">
