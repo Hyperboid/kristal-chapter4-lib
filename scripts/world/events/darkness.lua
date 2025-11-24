@@ -1,14 +1,5 @@
 local Darkness, super = Class(Event)
 
-Kristal.Shaders["InvertColor"] = love.graphics.newShader[[
-    vec4 effect(vec4 color, Image texture, vec2 texture_coords, vec2 screen_coords)
-    {
-        vec4 pixel = Texel(texture, texture_coords); // get pixel color
-        pixel.rgb = vec3(1.0) - pixel.rgb; // invert RGB
-        return pixel * color; // multiply by input color (usually white)
-    }
-]]
-
 function Darkness:init(data)
     super.init(self, data)
     local properties = data and data.properties or {}
@@ -217,7 +208,7 @@ function Darkness:draw()
 		Draw.drawCanvas(base_highlight_canvas)
 		love.graphics.setBlendMode("multiply", "premultiplied")
 		local last_shader = love.graphics.getShader()
-		love.graphics.setShader(Kristal.Shaders["InvertColor"])
+		love.graphics.setShader(Assets.getShader("invert_color"))
 		love.graphics.setColor(1,1,1,1)
 		Draw.drawCanvas(fade_highlight_canvas, 0, 0, 0)
 		love.graphics.setShader(last_shader)
