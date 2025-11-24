@@ -72,6 +72,17 @@ function lib:init()
     end
 end
 
+function Ch4Lib.updateLightBeams(alpha)
+	for index, value in ipairs(Game.world.stage:getObjects(TileObject)) do
+		if value.light_area then
+			value.light_amount = MathUtils.lerp(0.1, 1, alpha)
+		end
+	end
+	for index, value in ipairs(Game.world.map:getEvents("lightbeamfx")) do
+		value.alpha = MathUtils.lerp(0.1, 1, alpha)
+	end
+end
+
 function Ch4Lib.scr_wave(arg0, arg1, speed_seconds, phase)
     local a4 = (arg1 - arg0) * 0.5;
     return arg0 + a4 + (math.sin((((Kristal.getTime()) + (speed_seconds * phase)) / speed_seconds) * (2 * math.pi)) * a4);
