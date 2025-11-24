@@ -34,9 +34,9 @@ function Prophecy:init(data)
     self.break_type = properties["break_type"] -- if enabled, sets the delay time for when the panel should break apart to a specific interval
     self.break_delay = properties["break_delay"] -- if "break_type" is not defined, sets the delay time for when the panel should break apart
 
-	self.no_back               = properties["no_back"] or false
+	self.no_back = properties["no_back"] or false
 
-	self.fade_edges            = properties["no_back"] or false
+	self.fade_edges = properties["fade_edges"] or false
 
     self.panel                 = ProphecyPanel(self.texture, self.text, self.panel_width, self.panel_height)
     self.panel.sprite_offset_x = self.sprite_offset_x
