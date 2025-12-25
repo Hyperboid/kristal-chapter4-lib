@@ -127,7 +127,7 @@ function Ch4Lib.setBlendState(operationRGB, operationAlpha, srcRGB, srcAlpha, ds
         error("setBlendState implementation is not available on this system.")
     end
 
-	love.graphics.flushBatch()
+    love.graphics.flushBatch()
 	
     Ch4Lib.assertOperationArgument(operationRGB)
     Ch4Lib.assertOperationArgument(operationAlpha)
