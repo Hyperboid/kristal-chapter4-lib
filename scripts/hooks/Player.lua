@@ -893,7 +893,7 @@ function Player:updateClimb()
     self.noclip = o_noclip
     if self.onrotatingtower and not self.physics.move_target then
         -- TODO: Find out why I have to put 1 here and not 0
-        self.x = MathUtils.wrap(self.x, 1, self.world.width)
+        self.x = MathUtils.wrap(self.x, 0, self.world.width)
     end
 	self.climbmomentum = self.climbmomentum - 0.03*DTMULT
 	if self.climbmomentum <= 0 then
