@@ -64,6 +64,9 @@ function lib:init()
 			end
 		end
     end
+    Game:registerEvent("climbwaterbucket", function(data)
+        return ClimbWaterBucket(data)
+    end)
 end
 
 function Ch4Lib.updateLightBeams(alpha)
