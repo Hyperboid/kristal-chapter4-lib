@@ -1,5 +1,5 @@
 ---@class Chapter4Lib.ClimbWaterBucket : Event
----@field generator boolean *[Property `generate`]* Whether the  (Defaults to `false`)
+---@field generator boolean *[Property `generate`]* Whether the bucket generates water rather than stopping it (Defaults to `false`)
 ---@field remote boolean *[Property `remote`]* Needs description! (Defaults to `false`)
 ---@field timer number *[Property `timer`]* Needs description! (Defaults to `0`)
 ---@field waittime number *[Property `waittime`]* Needs description! (Defaults to `60`)
