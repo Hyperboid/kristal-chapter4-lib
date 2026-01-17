@@ -1,3 +1,4 @@
+---@class Chapter4Lib.ClimbWater : Object
 local ClimbWater, super = Class(Object)
 
 function ClimbWater:init(x, y, watertype, movetimer, moverate, tilelimit, fallingtimer, falldir, spawnrate, activetime)
