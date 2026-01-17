@@ -1,5 +1,6 @@
----@class Event.prophecy : Event
-local Prophecy, super = Class(Event, "prophecy")
+---@class Chapter4Lib.Prophecy : Event
+---@field texture string *[Property `texture`]* The sprite to display, relative to world/events/prophecy (Defaults to `initial1`)
+local Prophecy, super = Class(Event, "Prophecy")
 
 function Prophecy:init(data)
     super.init(self, data)
@@ -12,7 +13,7 @@ function Prophecy:init(data)
 	if tex then
 		self.panel_width = properties["panel_w"] or 150
 		self.panel_height = properties["panel_h"] or 90
-	else	
+	else
 		self.panel_width = properties["panel_w"] or 150
 		self.panel_height = properties["panel_h"] or 90
 	end
