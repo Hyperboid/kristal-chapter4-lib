@@ -1,7 +1,7 @@
 ---@class Chapter4Lib.ClimbWaterBucket : Event
 ---@field generator boolean *[Property `generate`]* Whether the bucket generates water rather than stopping it (Defaults to `false`)
 ---@field remote boolean *[Property `remote`]* Needs description! (Defaults to `false`)
----@field timer number *[Property `timer`]* Needs description! (Defaults to `0`)
+---@field timer number *[Property `timer`]* Timer used for waiting to spawn water. Property can be used to add an offset to the cycle, like the phase of a wave. (Defaults to `0`)
 ---@field waittime number *[Property `waittime`]* Needs description! (Defaults to `60`)
 ---@field activetime number *[Property `activetime`]* Needs description! (Defaults to `60`)
 ---@field spawnrate number *[Property `spawnrate`]* Needs description! (Defaults to `4`)
