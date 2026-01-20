@@ -18,7 +18,7 @@ function ClimbWaterBucket:init(data)
 	self:setOrigin(0, 0.5)
     self:setSprite("world/events/climbwater/climb_waterbucket")
 	self.buffer = 0
-	self:setHitbox(0, 0, 40, 40)
+	self:setHitbox(5, 0, 30, 40)
 	self.drawwater = 0
 	self.makewater = 0
 	self.con = 0
