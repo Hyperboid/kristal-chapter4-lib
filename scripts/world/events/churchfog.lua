@@ -29,13 +29,17 @@ local function draw_sprite_tiled_ext(tex, _, x, y, sx, sy, rotation, color, alph
     love.graphics.setColor(r,g,b,a)
 end
 
+function event:update()
+    super.draw(self)
+    self.auto = self.auto + (2 * DTMULT);
+    self.autoy = self.autoy + (2 * DTMULT);
+end
+
 function event:draw()
     local cx, cy = love.graphics.transformPoint(0, 0)
     love.graphics.origin()
     self.ss = 0.5;
     self.ssy = 0.5;
-    self.auto = self.auto + 2;
-    self.autoy = self.autoy + 2;
     self.xoff = ((cx + self.auto) * self.ss) + self.init_x;
     self.yoff = ((cy + self.autoy) * self.ssy) + self.init_y;
     self.mytransparency = 0.1;
