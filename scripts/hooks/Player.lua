@@ -18,6 +18,7 @@ function Player:init(chara, x, y)
         10,
         22,
     }
+	self.climbcon = 0
     self.draw_reticle = true
     self.onrotatingtower = false
     self.climb_speedboost = -1
@@ -42,6 +43,12 @@ function Player:init(chara, x, y)
 	self.grabontimer = 0
 	self.siner = 0
 	self.exitcon = 1
+	self.cuttimer = 0
+	self.climb_jumping = 0
+	self.climb_during_timer = nil
+	self.climb_after_1_timer = nil
+	self.climb_after_2_timer = nil
+	self.climb_inv_timer = 0
 end
 
 function Player:beginClimb(last_state)
@@ -55,6 +62,88 @@ function Player:setActor(actor)
     super.setActor(self, actor)
     local size = 34
     self.climb_collider = Hitbox(Game.world, (self.width/2) - (size/2), (self.height/2) - (size/2) + 8, (size), (size))
+end
+
+function Player:update()
+	if self.climbcon == 10 then
+		self.saved_phys = self.physics.move_target
+        self:setSprite("climb/charge/up")
+		self.sprite:setFrame(3)
+		self.cuttimer = self.cuttimer + DTMULT
+		if self.cuttimer >= 5 then
+			self.physics.move_target = self.saved_phys
+			self.climbcon = 2
+			if Game.world.player.climb_during_timer then
+				Game.world.timer:unpause(Game.world.player.climb_during_timer)
+			end
+			if Game.world.player.climb_after_1_timer then
+				Game.world.timer:unpause(Game.world.player.climb_after_1_timer)
+			end
+			if Game.world.player.climb_after_2_timer then
+				Game.world.timer:unpause(Game.world.player.climb_after_2_timer)
+			end	
+			self.physics.move_target = self.saved_phys
+		end
+		return
+	elseif self.climbcon == 2 then
+		self.alpha = 1
+		if (self.climb_inv_timer > 0) then
+			self.alpha = 0.5
+		end
+	end
+	super.update(self)
+end
+
+function Player:climbHurtParty(battler, damage)
+    Assets.playSound("hurt")
+
+    Game.world:shakeCamera()
+    Game.world:showHealthBars()
+
+    if type(battler) == "number" then
+        amount = battler
+        battler = nil
+    end
+
+    local any_killed = false
+    local any_alive = false
+    for _, party in ipairs(Game.party) do
+        if not battler or battler == party.id or battler == party then
+            local current_health = party:getHealth()
+            party:setHealth(party:getHealth() - amount)
+            if party:getHealth() <= 0 then
+                party:setHealth(1)
+                any_killed = true
+            else
+                any_alive = true
+            end
+
+            local dealt_amount = current_health - party:getHealth()
+
+            for _, char in ipairs(self.stage:getObjects(Character)) do
+                if char.actor and (char.actor.id == party:getActor().id) and dealt_amount > 0 then
+                    char:statusMessage("damage", dealt_amount)
+                end
+            end
+        elseif party:getHealth() > amount then
+            any_alive = true
+        end
+    end
+
+    if Game.world.player then
+        self.climb_inv_timer = 40
+    end
+
+    if any_killed and not any_alive then
+        if not Game.world.map:onGameOver() then
+            Game:gameOver(Game.world.soul:getScreenPos())
+        end
+        return true
+    elseif battler then
+        return any_killed
+    end
+
+    return false
 end
 
 function Player:draw()
@@ -76,9 +165,15 @@ function Player:endClimb(next_state)
     self:resetSprite()
     self.world.can_open_menu = true
     self.physics.move_target = nil
+	self.climbcon = 0
+    self.alpha = 1
 end
 
 function Player:processClimbInputs()
+	if self.climbcon == 0 then
+		self.climbcon = 2
+	end
+	self.climb_inv_timer = self.climb_inv_timer - DTMULT
 	self.siner = self.siner + DTMULT
 	local this_frame_directions = {}
 	local buffer_length = math.ceil(5 - (self.climbmomentum * 2))
@@ -584,6 +679,7 @@ function Player:doClimbJump(direction, distance)
 			end
 			self.drawoffsety = 0
 			if charged then
+				self.climb_jumping = 1
 				duration = (6 + distance*2)/30
 				local clipamount = 4/30
 				if charged then
@@ -593,7 +689,7 @@ function Player:doClimbJump(direction, distance)
 				local prevy = self.y
 				self:slideTo(self.x + (dx*40*dist), self.y + (dy*40*dist), duration, "out-sine")
 				self.climbtimer = 0
-				Game.world.timer:during(duration, function()
+				self.climb_during_timer = Game.world.timer:during(duration, function()
 					self.climbtimer = self.climbtimer + DT
 					self.drawoffsety = -math.sin((self.climbtimer / duration) * math.pi) * (2 * (self.jumpchargeamount - 1)) 
 					local afterimage = Sprite(self.sprite.texture, self.x, self.y + 16) -- for some reason the afterimage object insists on sticking directly to the player so i have to do this (sorry)
@@ -605,7 +701,7 @@ function Player:doClimbJump(direction, distance)
 					afterimage:setLayer(self.layer - 0.1)
 					Game.world:addChild(afterimage)
 				end)
-				Game.world.timer:after(duration/2, function ()
+				self.climb_after_1_timer = Game.world.timer:after(duration/2, function ()
 					if self.sprite.sprite_options[2] ~= "climb/climb" then
 						if self.facing == "left" then
 							self:setSprite("climb/land_left")
@@ -614,7 +710,7 @@ function Player:doClimbJump(direction, distance)
 						end
 					end
 				end)
-				Game.world.timer:after(duration-clipamount, function ()
+				self.climb_after_2_timer = Game.world.timer:after(duration-clipamount, function ()
 					self:resetPhysics()
 					self.x = prevx + (dx*40*dist)
 					self.y = prevy + (dy*40*dist)
@@ -633,6 +729,7 @@ function Player:doClimbJump(direction, distance)
 						self:climb_callback()
 						self.climb_callback = nil
 					end
+					self.climb_jumping = 0
 					self.neutralcon = 1
 					if obj and obj.onClimbEnter then
 						obj:onClimbEnter(self)
@@ -705,15 +802,8 @@ function Player:drawClimbReticle()
     if not self.draw_reticle then
         return
     end
-    local tempalpha = 1;
-
-    love.graphics.push()
+	love.graphics.push()
     love.graphics.translate(self.width/2, self.height - 10)
-
-    -- I /think/ this is what global.inv is?
-    if (self.world.soul.inv_timer > 0) then
-        tempalpha = 0.5;
-    end
 
     local found = 0;
     local _alph;

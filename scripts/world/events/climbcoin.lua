@@ -11,6 +11,7 @@ function event:init(data)
 	self.con = 0
 	self.siner = 0
 	self.bowlindex = 0
+	self:setHitbox(5, 5, 30, 30)
 end
 
 function event:update()
