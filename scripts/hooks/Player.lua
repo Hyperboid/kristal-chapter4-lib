@@ -312,12 +312,27 @@ function Player:processClimbInputs()
 			self.fallingtimer = self.fallingtimer - DTMULT
 			if self.fallingtimer <= 0 then
 				if self.grabon then
-					local allowed, obj = self:canClimb(0, 0)
-					if allowed and obj and self.y >= obj.y + 30 then
-						local grabx = self.x
-						local graby = self.y
-						self.grabx = (MathUtils.round(grabx / 40) * 40) - 20
-						self.graby = (MathUtils.round(graby / 40) * 40) + 2
+					self.grabx = self.remx + (MathUtils.round((self.x - self.remx) / 40) * 40)
+					self.graby = self.remy + (MathUtils.round((self.y - self.remy) / 40) * 40)
+					local climbarea = nil
+					for _, event in ipairs(self.world.stage:getObjects(Event)) do
+						---@cast event Event.climbarea|Event.climbentry
+						-- TODO: Find out where these numbers come from, because it sure isn't the actor
+						local x,y = -17, -37
+						x,y = x + self.grabx,y + self.graby
+						if self.onrotatingtower then
+							x = MathUtils.wrap(x, 0, self.world.width+1)
+						end
+						self.climb_collider.parent = self.parent
+						self.climb_collider.x, self.climb_collider.y = x, y
+						if (event.preClimbEnter or event.climbable) and event:collidesWith(self.climb_collider) then
+							if event.climbable then
+								climbarea = event
+							end
+						end
+					end
+					Object.endCache()
+					if climbarea then
 						self.grabontimer = 15
 						self.graboncon = 1
 						self.falling = 0
