@@ -312,20 +312,7 @@ function Player:processClimbInputs()
 			self.fallingtimer = self.fallingtimer - DTMULT
 			if self.fallingtimer <= 0 then
 				if self.grabon then
-					local climbwater = false
-					for _, water in ipairs(self.world.stage:getObjects(ClimbWater)) do
-						local x,y = -17, -37
-						x,y = x + self.x,y + self.y
-						if self.onrotatingtower then
-							x = MathUtils.wrap(x, 0, self.world.width+1)
-						end
-						self.climb_collider.parent = self.parent
-						self.climb_collider.x, self.climb_collider.y = x, y
-						if water:collidesWith(self.climb_collider) then
-							climbwater = true
-						end
-					end
-					local allowed, obj = self:canClimb(0, 0) and not climbwater
+					local allowed, obj = self:canClimb(0, 0)
 					if allowed and obj and self.y >= obj.y + 30 then
 						local grabx = self.x
 						local graby = self.y
