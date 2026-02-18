@@ -56,6 +56,7 @@ function Player:beginClimb(last_state)
 	self.climbmomentum = 0
 	self.neutralcon = 1
     self.world.can_open_menu = false
+    self.world.camera:setState("CLIMB")
 end
 
 function Player:setActor(actor)
@@ -167,6 +168,7 @@ function Player:endClimb(next_state)
     self.physics.move_target = nil
 	self.climbcon = 0
     self.alpha = 1
+    self.world.camera:setState("ATTACHED")
 end
 
 function Player:processClimbInputs()

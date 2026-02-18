@@ -69,6 +69,9 @@ function event:onInteract(player, dir)
     end
 
     self:startScript(function (scr)
+        -- TODO: Accurate camera movement
+        self.world:setCameraAttached(false)
+        self.world.camera:panTo(self.x + (self:getScaledWidth()/2), self.y+(self.up and 38 or -32), .5)
         local tx = Utils.round(player.x-(self.x+20), 40)+(self.x+20)
         tx = Utils.clamp(tx, self.x+20, self.x+self.width-20)
         local ty = Utils.round(self.y, 40)
@@ -92,6 +95,11 @@ end
 function event:preClimbEnter(player)
     if player.state_manager.state == "CLIMB" then
         player:setState("WALK")
+        -- TODO: Accurate camera movement
+        self.world.camera:panTo(self.x + (self:getScaledWidth()/2), self.y+(self.up and -42 or 43), .5, nil, function()
+            Kristal.Console:log(self.world.camera.y)
+            self.world.camera:setAttached(true)
+        end)
         local tx, ty = player.x, self.y
         ty = ty + self.yoffset
         self:startScript(function (scr)
