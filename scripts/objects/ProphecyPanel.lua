@@ -17,7 +17,7 @@ function ProphecyPanel:init(base_tex, faded_tex, sprite, text, width, height, mu
 
 	self.draw_sprite = true
 	self.draw_text = true
-	self.draw_back = true
+	self.draw_back = false
 	self.no_back = true
 	self.fade_edges = true
 	self.music_kind = 0
