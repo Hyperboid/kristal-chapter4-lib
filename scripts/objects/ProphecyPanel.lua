@@ -403,7 +403,7 @@ function ProphecyPanel:draw()
 			Draw.draw(text_canvas, -self.width + xsin + self.text_offset_x, -self.height + ysin + self.text_offset_y, 0, 2, 2)
 			Draw.draw(text_canvas, -self.width + xsin + self.text_offset_x, -self.height + ysin + self.text_offset_y, 0, 2, 2)
 		end
-		if Ch4Lib.accurate_blending then			
+		if Ch4Lib.accurate_blending then
 			self:setGMBlendMode("bm_normal")
 		else
 			love.graphics.setBlendMode("alpha")
