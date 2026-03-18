@@ -17,7 +17,7 @@ end
 function event:update()
     super.update(self)
 	self.siner = self.siner + DTMULT
-	local collider = Hitbox(self, 0, 0, 40, 40)
+	local collider = Hitbox(self, 5, 5, 30, 30)
 	if self.con == 0 then
 		Object.startCache()
 		if Game.world.player:collidesWith(collider) and Game.world.player.state == "CLIMB" then
