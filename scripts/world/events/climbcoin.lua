@@ -68,7 +68,7 @@ function event:update()
         )
         value_text.physics.speed_y = -4
         value_text.physics.friction = 0.25
-        value_text:setLayer(Game.world.player.layer - 0.05)
+        value_text:setLayer(Game.world.player.layer + 0.05)
 		Game.world.timer:after(1, function()
 			value_text:remove()
 		end)
