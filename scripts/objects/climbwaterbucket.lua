@@ -35,13 +35,18 @@ function ClimbWaterBucket:init(data)
 	if self.generator then
 		self:setScale(self.scale_x, -self.scale_y)
 	end
+	if Game.world.map.cyltower then
+		self.visible = false
+		self.x = self.x + 40
+	end
+	self.climb_obstacle = true
 	self.stoptimerconds = nil
 end
 
 function ClimbWaterBucket:update()
     super.update(self)
+	self.drawwater = self.drawwater - DTMULT
 	if self.generator then
-		self.drawwater = self.drawwater - DTMULT
 		if Game.world.player and Game.world.player:isMovementEnabled() then
 			self.timer = self.timer + DTMULT
 			local waterspawntype = 1
@@ -51,22 +56,26 @@ function ClimbWaterBucket:update()
 			if self.stoptimerconds == nil then
 				if waterspawntype == 1 then
 					if MathUtils.round(self.timer) == self.waittime - 6 then
-						local splash = Sprite("world/events/climbwater/climb_waterbucket_splash")
-						splash:play(3 / 30, false, function () splash:remove() end)
-						splash:setOrigin(0, 1)
-						splash:setScale(2, -2)
-						splash:setPosition(0, 20)
-						splash.layer = self.layer + 0.1
-						self:addChild(splash)
-						if FRAMERATE > 30 or (FRAMERATE == 0 and FPS > 30) then
-							self.stoptimerconds = self.timer
+						if self.world.map.cyltower then
+							self.drawwater = MathUtils.round(3 * #Assets.getFrames("world/events/climbwater/climb_waterbucket_splash"))
+						else
+							local splash = Sprite("world/events/climbwater/climb_waterbucket_splash")
+							splash:play(3 / 30, false, function () splash:remove() end)
+							splash:setOrigin(0, 1)
+							splash:setScale(2, -2)
+							splash:setPosition(0, 20)
+							splash.layer = self.layer + 0.1
+							self:addChild(splash)
+							if FRAMERATE > 30 or (FRAMERATE == 0 and FPS > 30) then
+								self.stoptimerconds = self.timer
+							end
 						end
 					end
 					if MathUtils.round(self.timer) == self.waittime then
 						local water = ClimbWater(self.x, self.y, 1, self.watermovetimer,
 						self.watermoverate, self.watertilelimit, self.waterfallingtimer,
 						self.waterdir, self.spawnrate, self.activetime)
-						water.layer = self.layer + 0.1
+						water.layer = self.world.player.layer + 0.01
 						self.world:addChild(water)
 						if FRAMERATE > 30 or (FRAMERATE == 0 and FPS > 30) then
 							self.stoptimerconds = self.timer
@@ -87,11 +96,11 @@ function ClimbWaterBucket:update()
 							self.stoptimerconds = self.timer
 						end
 					end
-					if Utils.round(self.makewater) == 0 then
+					if MathUtils.round(self.makewater) == 0 then
 						local water = ClimbWater(self.x, self.y, 2, self.watermovetimer,
 						self.watermoverate, self.watertilelimit, self.waterfallingtimer,
 						self.waterdir, self.spawnrate, self.activetime)
-						water.layer = self.layer + 0.1
+						water.layer = self.world.player.layer + 0.01
 						self.world:addChild(water)
 						if FRAMERATE > 30 or (FRAMERATE == 0 and FPS > 30) then
 							self.stoptimerconds = self.timer
@@ -118,13 +127,17 @@ function ClimbWaterBucket:update()
 		end
 		Object.endCache()
 		if MathUtils.round(self.buffer) == 0 then
-			local splash = Sprite("world/events/climbwater/climb_waterbucket_splash")
-			splash:play(3 / 30, false, function () splash:remove() end)
-			splash:setOrigin(0, 1)
-			splash:setScale(2, 2)
-			splash:setPosition(0, 20)
-			splash.layer = splash.layer + 0.01
-			self:addChild(splash)
+			if self.world.map.cyltower then
+				self.drawwater = MathUtils.round(3 * #Assets.getFrames("world/events/climbwater/climb_waterbucket_splash"))
+			else
+				local splash = Sprite("world/events/climbwater/climb_waterbucket_splash")
+				splash:play(3 / 30, false, function () splash:remove() end)
+				splash:setOrigin(0, 1)
+				splash:setScale(2, 2)
+				splash:setPosition(0, 20)
+				splash.layer = splash.layer + 0.01
+				self:addChild(splash)
+			end
 		end
 	end
 	if self.stoptimerconds ~= nil and self.timer >= self.stoptimerconds+0.6 then

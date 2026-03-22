@@ -16,7 +16,7 @@ function ClimbEnemy:init(data)
 	self.flashadjustmentx = 0
 	self.flashadjustmenty = 0
 	self.effectadjustmentx = 0
-	self.effectadjustmenty = 0
+	self.effectadjustmenty = 80
 	self.shakex = 0
 	self.hp = properties["hp"] or 1
 	self.dir = 2
@@ -46,9 +46,25 @@ function ClimbEnemy:init(data)
     self.speed = properties["speed"] or 12
     self.progress = (properties["progress"] or 0) % 1
     self.reverse_progress = false
+	if Game.world.map.cyltower then
+		self.visible = false
+		if Game.world.map.cyltower.appearance == 1 then
+			self.x = self.x - 40
+			self.flashadjustmentx = -20
+			self.flashadjustmenty = 20
+			self.effectadjustmentx = -60
+			self.effectadjustmenty = 20
+		else
+			self.flashadjustmentx = -20
+			self.flashadjustmenty = -20
+			self.effectadjustmentx = -20
+			self.effectadjustmenty = -20
+		end
+	end
+	self.climb_obstacle = true
 end
 
-function ChaserEnemy:onAdd(parent)
+function ClimbEnemy:onAdd(parent)
     super.onAdd(self, parent)
 
     self:snapToPath()
@@ -150,7 +166,14 @@ function ClimbEnemy:update()
 	if self.damagecon == 2 then
 		self.timer = 0
 		self.color = COLORS.white
-		self:flash()
+		if self.world.map.cyltower then
+			local flash = FlashFadeTower(self.sprite.texture, self.x + self.flashadjustmentx + 40, self.y + self.flashadjustmenty)
+			Game.world:addChild(flash)
+		else
+			local flash = self:flash()
+			flash.x = flash.x + self.flashadjustmentx
+			flash.y = flash.y + self.flashadjustmenty
+		end
 		Assets.playSound("ui_cancel", 0.4, 1.2)
 		Assets.playSound("laz_c", 0.3, 1.2)
 		local dmg_sprite = Sprite("effects/attack/cut")
@@ -158,6 +181,9 @@ function ClimbEnemy:update()
         dmg_sprite:setScale(2, 2)
         local relative_pos_x, relative_pos_y = self:getRelativePos(-40+self.width / 2, -40+self.height / 2)
         dmg_sprite:setPosition(relative_pos_x, relative_pos_y)
+		if self.world.map.cyltower then
+			dmg_sprite:setPosition(self.world.map.cyltower.tower_x, self.world.map.cyltower.krisy)
+		end
         dmg_sprite.layer = self.layer + 1
         dmg_sprite:play(1 / 15, false, function(s) s:remove() end)
         Game.world:addChild(dmg_sprite)
@@ -180,6 +206,9 @@ function ClimbEnemy:update()
 			dmg_sprite:setScale(2, 2)
 			local relative_pos_x, relative_pos_y = self:getRelativePos(-40+self.width / 2, -40+self.height / 2)
 			dmg_sprite:setPosition(relative_pos_x, relative_pos_y)
+			if self.world.map.cyltower then
+				dmg_sprite:setPosition(self.world.map.cyltower.tower_x, self.world.map.cyltower.krisy)
+			end
 			dmg_sprite.layer = self.layer + 0.01
 			dmg_sprite:play(1 / 15, false, function(s) s:remove() end)
 			Game.world:addChild(dmg_sprite)
@@ -189,6 +218,9 @@ function ClimbEnemy:update()
 			dmg_sprite_2:setOrigin(0.5, 0.5)
 			dmg_sprite_2:setScale(2, 2)
 			dmg_sprite_2:setPosition(relative_pos_x, relative_pos_y)
+			if self.world.map.cyltower then
+				dmg_sprite_2:setPosition(self.world.map.cyltower.tower_x, self.world.map.cyltower.krisy)
+			end
 			dmg_sprite_2.layer = self.layer + 0.01
 			dmg_sprite_2:play(1 / 15, false, function(s) s:remove() end)
 			Game.world:addChild(dmg_sprite_2)
@@ -197,14 +229,23 @@ function ClimbEnemy:update()
 			Assets.playSound("ui_cancel", 1, 0.5)
 			Assets.playSound("damage", 0.5, 0.5)
 			Assets.playSound("punchmed", 0.4, 1)
-            local afterimage_2 = AfterImageCutHalf(self.sprite.texture_path)
-			afterimage_2:setPosition(self.x/2, self.y/2)
-			afterimage_2.layer = self.layer
-			afterimage_2:setOriginExact(0, 0)
-			Game.world:addChild(afterimage_2)
-			self:remove()
-			return
+			if self.world.map.cyltower then	
+				local afterimage_2 = AfterImageCutHalfTower(self.sprite.texture_path)
+				afterimage_2:setPosition(self.x + self.effectadjustmentx + 40, self.y + self.effectadjustmenty)
+				afterimage_2.layer = self.layer
+				afterimage_2:setOriginExact(0, 0)
+				Game.world:addChild(afterimage_2)
+				self:remove()
+			else
+				local afterimage_2 = AfterImageCutHalf(self.sprite.texture_path)
+				afterimage_2:setPosition(self.x + self.effectadjustmentx, self.y/2 + self.effectadjustmenty)
+				afterimage_2.layer = self.layer
+				afterimage_2:setOriginExact(0, 0)
+				Game.world:addChild(afterimage_2)
+				self:remove()
+			end
 		end
+		return
 	end
 	if not Game.world.player:isMovementEnabled() then
 		return
@@ -256,7 +297,7 @@ function ClimbEnemy:update()
 				end
 				
 				if self.movetype == 1 then
-					if kris and MathUtils.dist(kris.x, kris.y) <= self.homedist then
+					if kris and MathUtils.dist(self.x, self.y, kris.x, kris.y) <= self.homedist then
 						seek = true
 					end
 					
@@ -408,7 +449,7 @@ function ClimbEnemy:update()
 							if potcard == 3 then
 								px = -40
 							end
-							leftdist = MAthUtils.dist(self.x + px, self.y + py, kris.x, kris.y)
+							leftdist = MathUtils.dist(self.x + px, self.y + py, kris.x, kris.y)
 							potcard = turnright
 							if potcard == 0 then
 								py = 40
@@ -422,7 +463,7 @@ function ClimbEnemy:update()
 							if potcard == 3 then
 								px = -40
 							end
-							rightdist = MAthUtils.dist(self.x + px, self.y + py, kris.x, kris.y)
+							rightdist = MathUtils.dist(self.x + px, self.y + py, kris.x, kris.y)
 							if leftdist > rightdist then
 								self.dir = turnright
 								domove = true
