@@ -65,8 +65,8 @@ function AfterImageCutHalf:draw()
     local m = Utils.ease(0, hh, (self.siner + 2)/10, "out-sine")
     love.graphics.setColor(r, g, b, self.spr_alpha)
 	
-    Draw.drawPart(self.texture, self.x - (self.width / 2), (self.y - m) - ((self.yo * self.scale_y) / 2), 0, 0, hw * 2, hh)
-    Draw.drawPart(self.texture, self.x - (self.width / 2), (self.y + m) - ((self.yo * self.scale_y) / 2), 0, hh, hw * 2, hh)
+    Draw.drawPart(self.texture, -(self.width / 2), -m - ((self.yo * self.scale_y) / 2), 0, 0, hw * 2, hh)
+    Draw.drawPart(self.texture, -(self.width / 2), m - ((self.yo * self.scale_y) / 2), 0, hh, hw * 2, hh)
 
     super.draw(self)
 end
