@@ -50,7 +50,7 @@ function BellPlayable:update()
 	end
 	if self.con == 2 then
 		self.timer = self.timer + DTMULT
-		self.sprite.rotation = self.sprite.rotation + math.rad((math.sin(self.timer) * 8) * DTMULT)
+		self.sprite.rotation = self.sprite.rotation - math.rad((math.sin(self.timer) * 8) * DTMULT)
 		
 		if self.timer >= 10 then
 			self.con = 0
