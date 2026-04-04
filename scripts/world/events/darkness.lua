@@ -13,6 +13,7 @@ function Darkness:init(data)
     self.overlap = true
 	self.highlightalpha = 1
 	self.draw_highlight = properties["highlight"] ~= false
+	self.darkmask_shader = Assets.getShader("addcolormask")
 end
 
 function Darkness:onAdd(parent)
@@ -60,28 +61,30 @@ function Darkness:drawLightsB()
     end
 end
 
+function Darkness:setGMBlendMode(blend_mode)
+	if blend_mode == "bm_subtract" then
+		Ch4Lib.setBlendState("add", "zero", "oneminussrccolor")
+	elseif blend_mode == "bm_add" then
+		Ch4Lib.setBlendState("add", "srcalpha", "one")
+	elseif blend_mode == "bm_normal" then
+		Ch4Lib.setBlendState("add", "srcalpha", "oneminussrcalpha")
+	end
+end
+
 function Darkness:draw()
 	if Ch4Lib.accurate_blending then
+		love.graphics.push()
 		local base_dim_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+		self:setGMBlendMode("bm_normal")
 		love.graphics.clear(COLORS.black)
-
+		love.graphics.push()
 		love.graphics.translate(MathUtils.round(-Game.world.camera.x+SCREEN_WIDTH/2), MathUtils.round(-Game.world.camera.y+SCREEN_HEIGHT/2))
-
 		for _, object in ipairs(Game.world.children) do
 			if object.darkness_unlit then
 				self:drawCharacter(object)
 				Draw.setColor(1, 1, 1, 1)
 			end
 			if object:includes(Character) and not object.no_highlight and not object.highlight_force_off and self.draw_highlight then
-				love.graphics.stencil((function ()
-					love.graphics.translate(0, 2)
-					love.graphics.setShader(Kristal.Shaders["Mask"])
-					self:drawCharacter(object)
-					love.graphics.setShader()
-					love.graphics.translate(0, -2)
-				end), "replace", 1)
-				love.graphics.setStencilTest("less", 1)
-
 				love.graphics.setShader(Kristal.Shaders["AddColor"])
 				
 				local col = COLORS["gray"]
@@ -89,11 +92,6 @@ function Darkness:draw()
 					col = Game:getPartyMember(object.party).highlight_color or COLORS["gray"]
 				end
 				local alpha = self.highlightalpha
-				for _,roomglow in ipairs(Game.world.map:getEvents("roomglow")) do
-					if roomglow then
-						alpha = alpha * 1-roomglow.actind
-					end
-				end
 				if object:getFX("climb_fade") then -- dumb fix
 					alpha = alpha * object:getFX("climb_fade").alpha
 				end
@@ -103,14 +101,22 @@ function Darkness:draw()
 				if alpha > 0 then
 					Draw.setColor(1,1,1,alpha)
 					self:drawCharacter(object)
+					love.graphics.push()
+					love.graphics.translate(0, 2)
+					self.darkmask_shader:sendColor("inputcolor", COLORS.black)
+					self.darkmask_shader:send("amount", alpha)
+					love.graphics.setShader(self.darkmask_shader)
+					Ch4Lib.setBlendState("add", "add", "srcalpha", "dstalpha", "oneminussrcalpha", "zero")
+					self:drawCharacter(object)
+					self:setGMBlendMode("bm_normal")
+					love.graphics.setShader()
+					love.graphics.pop()
 					Draw.setColor(1,1,1,1)
 				end
-
 				love.graphics.setShader()
-
-				love.graphics.setStencilTest()
 			end
 		end
+		love.graphics.pop()
 		Draw.setColor(1,1,1,1)
 		
 		love.graphics.translate(MathUtils.round(Game.world.camera.x+SCREEN_WIDTH/2), MathUtils.round(Game.world.camera.y+SCREEN_HEIGHT/2))
@@ -118,27 +124,26 @@ function Darkness:draw()
 		
 		local dim_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 		love.graphics.clear()
-		love.graphics.push()
 		Draw.drawCanvas(base_dim_canvas)
-		Ch4Lib.setBlendState("add", "zero", "oneminussrccolor")
+		self:setGMBlendMode("bm_subtracct")
 		self:drawLightsA()
-		love.graphics.pop()
+		self:setGMBlendMode("bm_normal")
 		Draw.popCanvas(true)
 		
 		local dark_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 		love.graphics.clear()
-		love.graphics.push()
 		Draw.drawCanvas(dim_canvas)
-		Ch4Lib.setBlendState("add", "zero", "oneminussrccolor")
+		self:setGMBlendMode("bm_subtract")
 		self:drawLightsB()
-		love.graphics.pop()
+		self:setGMBlendMode("bm_normal")
 		Draw.popCanvas(true)
 		
-		love.graphics.setBlendMode("alpha", "alphamultiply")
+		self:setGMBlendMode("bm_normal")
 		love.graphics.setColor(1,1,1,0.5*self.alpha)
 		Draw.draw(dim_canvas)
 		love.graphics.setColor(1,1,1,self.alpha)
 		Draw.draw(dark_canvas)
+		love.graphics.pop()
 	else
 		local dark_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 		love.graphics.setColor(1-self.alpha, 1-self.alpha, 1-self.alpha)

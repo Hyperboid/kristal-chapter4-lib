@@ -77,23 +77,41 @@ function ChurchLightBeamFX:drawParticles()
     local width, height = SCREEN_WIDTH, SCREEN_HEIGHT
     self.shader:send("size", {width, height})
     self.shader:send("factor", 1)
-	love.graphics.setBlendMode("add")
+	if Ch4Lib.accurate_blending then
+		self:setGMBlendMode("bm_add")
+	else
+		love.graphics.setBlendMode("add")
+	end
 	for i, part in ipairs(self.particles) do
 		Draw.setColor(1, 1, 1, part.alpha * self.alpha)
 		Draw.draw(self.part_tex, part.x, part.y, 0, part.size, part.size)
 	end
-	love.graphics.setBlendMode("alpha")
+	if Ch4Lib.accurate_blending then
+		self:setGMBlendMode("bm_normal")
+	else
+		love.graphics.setBlendMode("alpha")
+	end
     love.graphics.setShader(last_shader)
+end
+
+function ChurchLightBeamFX:setGMBlendMode(blend_mode)
+	if blend_mode == "bm_subtract" then
+		Ch4Lib.setBlendState("add", "zero", "oneminussrccolor")
+	elseif blend_mode == "bm_add" then
+		Ch4Lib.setBlendState("add", "srcalpha", "one")
+	elseif blend_mode == "bm_normal" then
+		Ch4Lib.setBlendState("add", "srcalpha", "oneminussrcalpha")
+	end
 end
 
 function ChurchLightBeamFX:draw()
     super.draw(self)
+	love.graphics.push()
     local mask_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 	local transformed = false
 	if Ch4Lib.accurate_blending then
-		love.graphics.push()
 		love.graphics.clear(COLORS.white, 1)
-		Ch4Lib.setBlendState("add", "zero", "oneminussrccolor")
+		self:setGMBlendMode("bm_normal")
 	end
 	for index, value in ipairs(Game.world.stage:getObjects(TileObject)) do
 		if value.light_area and value.light_dust then
@@ -108,12 +126,13 @@ function ChurchLightBeamFX:draw()
 				sx = MathUtils.absMin(sx, sy)
 				sy = sx
 			end
-			love.graphics.setColor(1,1,1,1)
+			if Ch4Lib.accurate_blending then
+				love.graphics.setColor(0,0,0,1)
+			else
+				love.graphics.setColor(1,1,1,1)
+			end
 			value.tileset:drawTile(value.tile, value.x + value.width / 2, value.y - value.height + value.height / 2, 0, sx, sy, tile_width/2, tile_height/2)
 		end
-	end
-	if Ch4Lib.accurate_blending then
-		love.graphics.pop()
 	end
 	Draw.popCanvas(true)
 	local dust_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
@@ -122,12 +141,11 @@ function ChurchLightBeamFX:draw()
 	local dust_tiled_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 	love.graphics.setBlendMode("alpha", "premultiplied")
 	if Ch4Lib.accurate_blending then
-		love.graphics.push()
 		Draw.drawWrapped(dust_canvas, true, true, -(Game.world.camera.x - SCREEN_WIDTH/2), -(Game.world.camera.y - SCREEN_HEIGHT/2), 0)
 		love.graphics.setBlendMode("alpha", "alphamultiply")
-		Ch4Lib.setBlendState("add", "zero", "oneminussrccolor")
+		self:setGMBlendMode("bm_subtract")
 		Draw.draw(mask_canvas)
-		love.graphics.pop()
+		self:setGMBlendMode("bm_normal")
 		Draw.popCanvas(true)
 		Draw.setColor(1, 1, 1, 1)
 		Draw.drawCanvas(dust_tiled_canvas)
@@ -150,6 +168,7 @@ function ChurchLightBeamFX:draw()
 		love.graphics.setStencilTest()
 		Draw.setColor(1, 1, 1, 1)
 	end
+	love.graphics.pop()
 	super.draw(self)
 end
 
