@@ -74,7 +74,7 @@ end
 function Darkness:draw()
 	if Ch4Lib.accurate_blending then
 		love.graphics.push()
-		local base_dim_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+		local dim_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 		self:setGMBlendMode("bm_normal")
 		love.graphics.clear(COLORS.black)
 		love.graphics.push()
@@ -117,15 +117,7 @@ function Darkness:draw()
 			end
 		end
 		love.graphics.pop()
-		Draw.setColor(1,1,1,1)
-		
-		love.graphics.translate(MathUtils.round(Game.world.camera.x+SCREEN_WIDTH/2), MathUtils.round(Game.world.camera.y+SCREEN_HEIGHT/2))
-		Draw.popCanvas(true)
-		
-		local dim_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
-		love.graphics.clear()
-		Draw.drawCanvas(base_dim_canvas)
-		self:setGMBlendMode("bm_subtracct")
+		self:setGMBlendMode("bm_subtract")
 		self:drawLightsA()
 		self:setGMBlendMode("bm_normal")
 		Draw.popCanvas(true)
