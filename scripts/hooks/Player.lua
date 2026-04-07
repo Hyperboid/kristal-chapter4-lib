@@ -49,6 +49,8 @@ function Player:init(chara, x, y)
 	self.climb_after_1_timer = nil
 	self.climb_after_2_timer = nil
 	self.climb_inv_timer = 0
+
+  self.climbareas = {}
 	self.falseloop = false
 	self.falseloopx = {}
 end
@@ -640,7 +642,7 @@ function Player:canClimb(dx, dy)
     Object.startCache()
     local climbarea
     local trigger
-    for _, event in ipairs(self.world.stage:getObjects(Event)) do
+    for _, event in ipairs(self.climbareas) do
         ---@cast event Event.climbarea|Event.climbentry
         -- TODO: Find out where these numbers come from, because it sure isn't the actor
         local x,y = -17, -37
@@ -1049,6 +1051,9 @@ function Player:drawClimbReticle()
 end
 
 function Player:updateClimb()
+    self.climbareas = TableUtils.filter(self.world.stage:getObjects(Event), function (v)
+        return (v.preClimbEnter or v.climbable) and MathUtils.dist(self.x, self.y, v.x, v.y) <= (#self.charge_times+1)*(math.sqrt((v.width^2)+(v.height^2))/40)*40+40
+    end)
     if self:isMovementEnabled() and not self.physics.move_target then
         self:processClimbInputs()
         if self.jumpchargecon > 0 then
