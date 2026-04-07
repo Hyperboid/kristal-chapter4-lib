@@ -95,6 +95,9 @@ function Darkness:draw()
 				if object:getFX("climb_fade") then -- dumb fix
 					alpha = alpha * object:getFX("climb_fade").alpha
 				end
+				if not object.visible then
+					alpha = 0
+				end
 				Kristal.Shaders["AddColor"]:sendColor("inputcolor", col)
 				Kristal.Shaders["AddColor"]:send("amount", alpha)
 
@@ -182,6 +185,9 @@ function Darkness:draw()
 				local alpha = self.highlightalpha
 				if object:getFX("climb_fade") then -- dumb fix
 					alpha = alpha * object:getFX("climb_fade").alpha
+				end
+				if not object.visible then
+					alpha = 0
 				end
 				Kristal.Shaders["AddColor"]:sendColor("inputcolor", col)
 				Kristal.Shaders["AddColor"]:send("amount", alpha)
