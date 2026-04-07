@@ -19,6 +19,7 @@ function event:init(data)
     self.mysprite = Assets.getTexture "backgrounds/churchfog";
     self.sprwidth = (self.mysprite):getWidth() * 2;
     self.sprheight = (self.mysprite):getHeight() * 2;
+	self.mytransparency = 0.1;
 end
 
 local function draw_sprite_tiled_ext(tex, _, x, y, sx, sy, rotation, color, alpha)
@@ -43,7 +44,6 @@ function event:draw()
     self.ssy = 0.5;
     self.xoff = ((cx + self.auto) * self.ss) + self.xx;
     self.yoff = ((cy + self.autoy) * self.ssy) + self.yy;
-    self.mytransparency = 0.1;
     local finalxoff = self.xoff % self.sprwidth;
     local finalyoff = self.yoff % self.sprheight;
     local canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
