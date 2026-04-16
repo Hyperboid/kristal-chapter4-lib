@@ -164,7 +164,16 @@ function Darkness:draw()
 
 		for _, object in ipairs(Game.world.children) do
 			if object.darkness_unlit then
+				love.graphics.stencil((function ()
+					love.graphics.setShader(Kristal.Shaders["Mask"])
+					self:drawLightsB()
+					self:drawLightsA()
+					love.graphics.setShader()
+				end), "replace", 1)
+				love.graphics.setStencilTest("less", 1)
 				self:drawCharacter(object)
+				love.graphics.setStencilTest()
+				Draw.setColor(1, 1, 1, 1)
 			end
 			if object:includes(Character) and not object.no_highlight and not object.highlight_force_off and self.draw_highlight then
 				love.graphics.stencil((function ()
