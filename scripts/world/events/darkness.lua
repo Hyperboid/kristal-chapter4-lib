@@ -74,10 +74,9 @@ end
 function Darkness:draw()
 	if Ch4Lib.accurate_blending then
 		love.graphics.push()
-		local dim_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
-		self:setGMBlendMode("bm_normal")
-		love.graphics.clear(COLORS.black)
+		local chara_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
 		love.graphics.push()
+		love.graphics.clear()
 		love.graphics.translate(MathUtils.round(-Game.world.camera.x+SCREEN_WIDTH/2), MathUtils.round(-Game.world.camera.y+SCREEN_HEIGHT/2))
 		for _, object in ipairs(Game.world.children) do
 			if object.darkness_unlit then
@@ -115,29 +114,39 @@ function Darkness:draw()
 					love.graphics.setShader()
 					love.graphics.pop()
 					Draw.setColor(1,1,1,1)
+					
 				end
 				love.graphics.setShader()
 			end
 		end
 		love.graphics.pop()
+		Draw.popCanvas(true)
+		
+		local dim_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+		self:setGMBlendMode("bm_normal")
+		love.graphics.clear(COLORS.black)
+		Draw.drawCanvas(chara_canvas)
 		self:setGMBlendMode("bm_subtract")
 		self:drawLightsA()
-		self:setGMBlendMode("bm_normal")
 		Draw.popCanvas(true)
 		
 		local dark_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+		self:setGMBlendMode("bm_normal")
 		love.graphics.clear()
 		Draw.drawCanvas(dim_canvas)
 		self:setGMBlendMode("bm_subtract")
 		self:drawLightsB()
-		self:setGMBlendMode("bm_normal")
 		Draw.popCanvas(true)
 		
-		self:setGMBlendMode("bm_normal")
-		love.graphics.setColor(1,1,1,0.5*self.alpha)
-		Draw.draw(dim_canvas)
+		local final_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
+		love.graphics.setColor(1,1,1,0.5)
+		Draw.drawCanvas(dim_canvas)
+		love.graphics.setColor(1,1,1,1)
+		Draw.drawCanvas(dark_canvas)
+		Draw.popCanvas(true)
 		love.graphics.setColor(1,1,1,self.alpha)
-		Draw.draw(dark_canvas)
+		Draw.draw(final_canvas)
+		love.graphics.setBlendMode("alpha", "alphamultiply")
 		love.graphics.pop()
 	else
 		local dark_canvas = Draw.pushCanvas(SCREEN_WIDTH, SCREEN_HEIGHT)
