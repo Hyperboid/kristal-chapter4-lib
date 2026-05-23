@@ -57,7 +57,6 @@ function TileObject:drawLightA()
 			end
 		end
 	end
-	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function TileObject:drawLightB()
