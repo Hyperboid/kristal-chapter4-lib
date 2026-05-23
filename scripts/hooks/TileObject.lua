@@ -57,6 +57,7 @@ function TileObject:drawLightA()
 			end
 		end
 	end
+	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 function TileObject:drawLightB()
@@ -112,6 +113,7 @@ function TileObject:draw()
 		love.graphics.setBlendMode("alpha")
 	end
 	love.graphics.pop()
+	love.graphics.setBlendMode("alpha", "alphamultiply")
 end
 
 return TileObject
