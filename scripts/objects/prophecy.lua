@@ -41,6 +41,9 @@ function Prophecy:init(data)
 	self.no_back = properties["no_back"] or false
 
 	self.fade_edges = properties["fade_edges"] or false
+	self.draw_back = properties["draw_back"] or false
+	self.no_text = properties["no_text"] or false
+	self.text_only = properties["text_only"] or false
 
 	self.base_tex = properties["base_tex"] or "backgrounds/IMAGE_DEPTH_EXTEND_MONO_SEAMLESS"
 	self.faded_tex = properties["faded_tex"] or "backgrounds/IMAGE_DEPTH_EXTEND_SEAMLESS"
@@ -52,6 +55,10 @@ function Prophecy:init(data)
     self.panel.text_offset_y   = self.text_offset_y
 	self.panel.no_back		   = self.no_back
 	self.panel.fade_edges	   = self.fade_edges
+	self.panel.draw_back	   = self.draw_back
+	self.panel.no_text		   = self.no_text
+	self.panel.text_only	   = self.text_only
+	
 	if properties["propbluecol"] then
 		self.panel.propblue = properties["propbluecol"] and TiledUtils.parseColorProperty(properties["propbluecol"])
 	end
@@ -59,7 +66,16 @@ function Prophecy:init(data)
 		self.panel.liteblue = properties["litebluecol"] and TiledUtils.parseColorProperty(properties["litebluecol"])
 	end
 	if properties["ogbgcol"] then
-		self.panel.ogbg = TiledUtils.parseColorProperty(properties["ogbgcol"])
+		self.panel.ogbg = properties["ogbgcol"] and TiledUtils.parseColorProperty(properties["ogbgcol"])
+	end
+	if properties["gradcol"] then
+		self.panel.gradcol = properties["gradcol"] and TiledUtils.parseColorProperty(properties["gradcol"])
+	end
+	if properties["gradalpha"] then
+		self.panel.gradalpha = properties["gradalpha"] or 1
+	end
+	if properties["backcol"] then
+		self.panel.backcol = properties["gradcol"] and TiledUtils.parseColorProperty(properties["backcol"])
 	end
 	if properties["linecol1"] then
 		self.panel.linecol1 = properties["linecol1"] and TiledUtils.parseColorProperty(properties["linecol1"])
