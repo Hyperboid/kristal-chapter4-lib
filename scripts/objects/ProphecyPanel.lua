@@ -448,6 +448,7 @@ function ProphecyPanel:draw()
 			love.graphics.setBlendMode("alpha")
 		end
 		love.graphics.pop()
+		love.graphics.setBlendMode("alpha", "alphamultiply")
 	end
 end
 
