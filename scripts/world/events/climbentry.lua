@@ -70,7 +70,7 @@ end
 ---@param player Player
 function event:onInteract(player, dir)
     if player.state_manager.state ~= "WALK" then return end
-	if self.need_climbclaws and not Game.inventory:getDarkInventory():hasItem("key/claimbclaws") then
+	if self.need_climbclaws and not Game.inventory:getDarkInventory():hasItem("claimbclaws") then
 		Game.world:showText("* (It looks like you'd be able to climb this if you had the right tools.)")
 		return true
 	end
