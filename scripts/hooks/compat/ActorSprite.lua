@@ -31,7 +31,7 @@ function ActorSprite:setSprite(texture, keep_anim, ignore_actor_callback)
             end
         end
         if changed then
-            Kristal.Console:warn("Actor " .. self.actor.id .. " is using an outdated climbing sprite structure! Please update it to use Kristal's native structure.")
+            Ch4Lib.logger:warnNotify("Actor " .. self.actor.id .. " is using an outdated climbing sprite structure! Please update it to use Kristal's native structure.")
             local ox, oy = self.actor:getOffset(texture)
             self.walk_override = false
             self.path = self.actor:getSpritePath()

@@ -1,3 +1,4 @@
+---@class Ch4Lib
 local lib = {}
 local FFI = require "ffi"
 
@@ -57,6 +58,7 @@ function lib:computeBezier(curve, iteration)
 end
 
 function lib:init()
+    self.logger = Logger("Ch4Lib", ConsoleFormats.BLUE)
     TableUtils.merge(MUSIC_VOLUMES, {
         ch4_battle = 0.7
     })

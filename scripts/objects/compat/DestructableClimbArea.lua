@@ -26,7 +26,7 @@ function DestructableClimbArea:init(x, y, shape, settings)
     end
 
     self.unsafe_area = nil
-    Kristal.Console:warn("Replace DestructableClimbArea with FallingClimbArea!")
+    Ch4Lib.logger:warnNotify("Replace DestructableClimbArea with FallingClimbArea!")
 end
 
 return DestructableClimbArea

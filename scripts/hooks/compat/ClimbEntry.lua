@@ -5,7 +5,7 @@ function ClimbEntry:onLoad()
     if not (self.target == nil and self.target_identifier == nil) then
         return super.onLoad(self)
     end
-    Kristal.Console:warn(string.format("ClimbEntry at (%d, %d) has invalid or missing target.", self.x, self.y))
+    Ch4Lib.logger:warn(string.format("ClimbEntry at (%d, %d) has invalid or missing target.", self.x, self.y))
     local marker_ref = "AutoGenMarkerThisSucks_" .. tostring(self) .. ""
     local up = self.data.properties.up and true or false
     Game.world.map.markers[marker_ref] = {
